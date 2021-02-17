@@ -64,7 +64,7 @@ namespace StoreModels
         }
 
         public Address CustBillAddress { 
-            get { return custBillAddress }
+            get { return custBillAddress; }
             set {
                 if (value.Equals(null)) {
                     //TODO: throw exception
