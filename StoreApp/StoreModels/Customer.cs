@@ -7,12 +7,14 @@ namespace StoreModels
     /// </summary>
     public class Customer
     {
+        //TODO: add more properties to identify the customer
         private string custName;
         private string custEmail;
-        private int custPhoneNumber;
+        private string custPhoneNumber;
         private Address custShipAddress;
         private Address custBillAddress;
         private List<Item> custCart;
+        //Order History
 
 
         public string CustName { 
@@ -38,7 +40,7 @@ namespace StoreModels
         
         }
 
-        public int CustPhoneNumber { 
+        public string CustPhoneNumber { 
             get {
                 return custPhoneNumber;
             } 
@@ -51,9 +53,31 @@ namespace StoreModels
             } 
         }
 
-        public string CustShipAddress { get; set; }
-        public string CustBillAddress { get; set; }
-        public List<Item> CustCart { get; set; }
-        //TODO: add more properties to identify the customer
+        public Address CustShipAddress { 
+            get { return custShipAddress; }
+            set {
+                if (value.Equals(null)) {
+                    //TODO: throw exception
+                }
+                custShipAddress = value;
+            } 
+        }
+
+        public Address CustBillAddress { 
+            get { return custBillAddress }
+            set {
+                if (value.Equals(null)) {
+                    //TODO: throw exception
+                }
+                custBillAddress = value;
+            }
+        }
+
+        public List<Item> CustCart { 
+            get; 
+            set; 
+        }
+        
+        public override string ToString() => $"Customer Details: \n\t Name: {this.CustName} \n\t Email: {this.CustEmail} \n\t Phone: {this.CustPhoneNumber} \n\t Address-- {this.CustShipAddress.ToString()}";
     }
 }
