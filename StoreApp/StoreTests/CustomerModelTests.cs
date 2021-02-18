@@ -18,8 +18,14 @@ namespace StoreTests
             Assert.Equal(testName, testCustomer.CustName);
         }
 
-        [Thheory]
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void CustomerNameShouldNotBeEmpty(string testName) 
+        {
+            //Act and Assert
+            Assert.Throws<ArgumentNullException>(() => testCustomer.CustName = testName);
+        }
 
-        
     }
 }
