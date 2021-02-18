@@ -10,10 +10,14 @@ namespace StoreModels
         private Address address;
         private string locationName;
         private List<Item> inventory;
+        private List<Order> orderHistory;
 
         public Address Address { get; set; }
         public string LocationName { get; set; }
         public List<Item> Inventory { get; set; }
+        public List<Order> OrderHistory { get; set; }
         //TODO: add some property for the location inventory
+
+        public override string ToString() => $"Location Details: \n\t Location Name: {this.LocationName} \n";
     }
 }
