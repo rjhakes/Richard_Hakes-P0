@@ -20,7 +20,7 @@ namespace StoreModels
         public string CustName { 
             get { return custName; } 
             set {
-                if (value.Equals(null) || value.Equals("")) {
+                if (value == null || value.Equals("")) {
                     throw new ArgumentNullException("Customer cannot be empty or null");
                 }
                 custName = value;
