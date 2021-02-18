@@ -7,16 +7,21 @@ namespace StoreBL
 {
     public class CustomerBL : ICustomerBL
     {
-        private ICustomerRepository repo = new CustomerRepoSC();
+        private ICustomerRepository _repo;
+
+        public CustomerBL(ICustomerRepository repo) {
+            _repo = repo;
+        }
+
         public void AddCustomer(Customer newCustomer)
         {
             //TODO: Add BL
-            repo.AddCustomer(newCustomer);
+            _repo.AddCustomer(newCustomer);
         }
         public List<Customer> GetCustomers()
         {
             //TODO Add BL
-            return repo.GetCustomers();
+            return _repo.GetCustomers();
         }
     }
 }
