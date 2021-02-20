@@ -9,6 +9,8 @@ namespace StoreModels
     {
         //TODO: add more properties to identify the customer
         private string custName;
+        private string userName;
+        private string savedPasswordHash;
         private string custEmail;
         private string custPhoneNumber;
         private Address custShipAddress;
@@ -21,7 +23,7 @@ namespace StoreModels
             get { return custName; } 
             set {
                 if (value == null || value.Equals("")) {
-                    throw new ArgumentNullException("Customer cannot be empty or null");
+                    throw new ArgumentNullException("Customer name cannot be empty or null");
                 }
                 custName = value;
             } 
@@ -38,6 +40,26 @@ namespace StoreModels
                 custEmail = value;
             }
         
+        }
+
+        public string UserName {
+            get { return userName; }
+            set {
+                if (value.Equals(null)) {
+                    //TODO: thhrow Exception
+                }
+                userName = value;
+            }
+        }
+
+        public string SavedPasswordHash {
+            get { return savedPasswordHash; }
+            set {
+                if (value.Equals(null)) {
+                    //TODO: throw Exception
+                }
+                savedPasswordHash = value;
+            }
         }
 
         public string CustPhoneNumber { 

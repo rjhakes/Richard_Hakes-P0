@@ -15,6 +15,6 @@ namespace StoreModels
         public string Country { get; set; }
         public string PostalCode { get; set; }
 
-        public override string ToString() => $"\n\t Street:\t {this.Street} \n\t City:\t\t {this.City} \n\t State:\t\t {this.State} \n\t Country:\t {this.Country} \n\t Postal Code:\t {this.PostalCode} \n\t";
+        public override string ToString() => $"\n\t\t Street:\t {this.Street} \n\t\t City:\t\t {this.City} \n\t\t State:\t\t {this.State} \n\t\t Country:\t {this.Country} \n\t\t Postal Code:\t {this.PostalCode} \n\t";
     }
 }
