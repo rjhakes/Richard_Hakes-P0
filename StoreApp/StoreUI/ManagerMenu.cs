@@ -2,67 +2,85 @@ using System;
 using StoreModels;
 using StoreBL;
 using StoreDL;
-using System.Collections.Generic;
 namespace StoreUI
 {
-    public class ManagerMenu : IMenu
+    class ManagerMenu : AMenu, IMenu
     {
-        private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
+        private readonly string _menu;
+        private Manager _manager;
+        public override string MenuPrint {
+            get { return _menu; }
+        }
+
+        
+        public ManagerMenu(Manager manager) {
+            _manager = manager;
+            _menu = "\n" +
+                    "\n[0] Find Customer" +
+                    "\n[1] " +
+                    "\n{2] " +
+                    "\n[Back] Previous Menu" +
+                    "\n[Exit] Exit App";
+        }
+
         public void Start() {
             Boolean stay = true;
             do {
-                Console.WriteLine("[0] Add Location");
-                Console.WriteLine("[1] Add Product");
-                Console.WriteLine("[2] Return to previous menu.");
-
-                Console.WriteLine("Enter a number: ");
+                Console.Clear();
+                Console.WriteLine($"Welcome {_manager.ManagerName}\n");
+                Console.WriteLine(MenuPrint);
+                Console.WriteLine("Enter a #, 'Back' or 'Exit': ");
                 string userInput = Console.ReadLine();
 
-                switch (userInput)
-                {
+                switch (userInput) {
                     case "0":
-                        CreateLocation();
+                        Console.Clear();
+                        Console.Write("Find Customer\n\tEmail:\t");
+                        try {
+                            userInput = Console.ReadLine();
+                            Customer _customer = FindCustomer(userInput);
+                            _customer.ToString();
+                        } catch (Exception e) {
+                            //log.WriteLine(e);
+                            Console.WriteLine($"We have no record of {userInput} as a Customer");
+                        } finally {
+                            Console.ReadLine();
+                        }
                         break;
                     case "1":
-                        CreateProduct();
+                        //CreateManager();
                         break;
                     case "2":
+                        //Console.Clear();
+                        //GetManagers();
+                        break;
+                    case "Back":
                         stay = false;
-                        ExitRemarks();
+                        break;
+                    case "Exit":
+                        System.Environment.Exit(1);
                         break;
                     default:
+                        Console.Clear();
                         Console.WriteLine("Invalid input! Please select a menu item");
+                        Console.WriteLine("Press Enter to view menu");
+                        Console.ReadLine();
                         break;
                 }
             } while (stay);
+            
         }
 
-        public void CreateLocation() {
-            Location newLocation = new Location();
-            Console.WriteLine("Enter Location Name: ");
-            newLocation.LocationName = Console.ReadLine();
-            Console.WriteLine("Enter Location Address: ");
-            Address newAddress = new Address();
-            Console.WriteLine("Street:");
-            newAddress.Street = Console.ReadLine();
-            Console.WriteLine("City:");
-            newAddress.City = Console.ReadLine();
-            Console.WriteLine("State:");
-            newAddress.State = Console.ReadLine();
-            Console.WriteLine("Country:");
-            newAddress.Country = Console.ReadLine();
-            Console.WriteLine("Postal Code:");
-            newAddress.PostalCode = Console.ReadLine();
-            newLocation.Address = newAddress;
-            List<Item> inventory = new List<Item>();
-            newLocation.Inventory = inventory;
-            _locationBL.AddLocation(newLocation);
-        }
-        public void CreateProduct() {
-
-        }
-        public void ExitRemarks() {
-            Console.WriteLine("Exiting Store");
+        public Customer FindCustomer(string _customerEmail) {
+            ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
+            foreach (var item in _customerBL.GetCustomers())
+            {
+                if (item.CustEmail == _customerEmail) {
+                    Console.WriteLine(item);
+                    return item;
+                }
+            }
+            return null;
         }
     }
 }

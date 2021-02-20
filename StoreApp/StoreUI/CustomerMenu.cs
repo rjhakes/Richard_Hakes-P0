@@ -2,141 +2,76 @@ using System;
 using StoreModels;
 using StoreBL;
 using StoreDL;
-
 namespace StoreUI
 {
-    public class CustomerMenu : IMenu
+    class CustomerMenu : AMenu, IMenu
     {
-        private ICustomerBL _customerBL;
-        public CustomerMenu(ICustomerBL customerBL) {
-            _customerBL = customerBL;
+        private readonly string _menu;
+        public override string MenuPrint {
+            get { return _menu; }
         }
+
+        private Customer _user;
+        public CustomerMenu(Customer user) {
+            _user = user;
+            _menu = "\n" +
+                    "\n[0] View My Account Information" +
+                    "\n[1] View My Order History" +
+                    "\n{2] View My Cart and Finalize Purchase" +
+                    "\n[3]" +
+                    "\n[Back] Previous Menu" +
+                    "\n[Exit] Exit App";
+        }
+
         public void Start() {
             Boolean stay = true;
-            do
-            {
-                //menu options part
-                Console.WriteLine("Welcome to my Store app! What would you like to do?");
-                Console.WriteLine("[0] Register as Customer");
-                Console.WriteLine("[1] Shop");
-                Console.WriteLine("[2] Review my Account Information");
-                Console.WriteLine("[3] View my Order History");
-                Console.WriteLine("[4] View my Cart");
-                Console.WriteLine("[5] Complete my Purchase");
-                Console.WriteLine("[6] Exit.");
-                Console.WriteLine("\n\n[7] Store Manager Login");
-
-                //get user input
-                Console.WriteLine("Enter a number: ");
+            do {
+                Console.Clear();
+                Console.WriteLine(_menu);
+                Console.WriteLine("Enter a #, 'Back' or 'Exit': ");
                 string userInput = Console.ReadLine();
 
-                switch (userInput)
-                {
+                IMenu menu;
+                switch (userInput) {
                     case "0":
-                        try {
-                            CreateCustomer();
-                        } catch (Exception e) {
-                            Console.WriteLine("Invalid Input" + e.Message);
-                            continue;
-                        }
+                        Console.Clear();
+                        Console.WriteLine("Account Information:\n");
+                        FindCustomer(_user.CustEmail);
+                        Console.ReadLine();
                         break;
                     case "1":
-                        //IMenu menu = new ShopMenu();
-                        //string storeLocation = menu.Start();
-                        IMenu menu = new LocationMenu(new LocationBL(new LocationRepoFile()));
-                        menu.Start();
+                        //CreateCustomer();
                         break;
-                    case "2":
+                    /*case "2":
+                        Console.Clear();
                         GetCustomers();
-                        break;
-                    case "3":
-                        GetOrderHistory();
-                        break;
-                    case "4":
-                        GetCart();
-                        break;
-                    case "5":
-                        CompletePurchase();
-                        break;
-                    case "6":
+                        break;*/
+                    case "Back":
                         stay = false;
-                        ExitRemarks();
                         break;
-                    case "7":
+                    case "Exit":
+                        System.Environment.Exit(1);
                         break;
                     default:
+                        Console.Clear();
                         Console.WriteLine("Invalid input! Please select a menu item");
+                        Console.WriteLine("Press Enter to view menu");
+                        Console.ReadLine();
                         break;
                 }
             } while (stay);
         }
-        public void CreateCustomer() {
-            Customer newCustomer = new Customer();
-            Console.WriteLine("Enter Customer Name: ");
-            newCustomer.CustName = Console.ReadLine();
-            Console.WriteLine("Enter Customer Email (example@domain.com)");
-            newCustomer.CustEmail = Console.ReadLine();
-            Console.WriteLine("Enter Customer Phone # (1234567890):");
-            newCustomer.CustPhoneNumber = Console.ReadLine(); 
-            Console.WriteLine("Enter Customer's Shipping Address");
-            Address newAddress = new Address();
-            Console.WriteLine("Street:");
-            newAddress.Street = Console.ReadLine();
-            Console.WriteLine("City:");
-            newAddress.City = Console.ReadLine();
-            Console.WriteLine("State:");
-            newAddress.State = Console.ReadLine();
-            Console.WriteLine("Country:");
-            newAddress.Country = Console.ReadLine();
-            Console.WriteLine("Postal Code:");
-            newAddress.PostalCode = Console.ReadLine();
-            newCustomer.CustShipAddress = newAddress;
-            Console.WriteLine("Is the Customer's Billing Address the same as Shipping? (y/n):");
-            if (Console.ReadLine()[0] == 'y') {
-                newCustomer.CustBillAddress = newCustomer.CustShipAddress;
-            } else {
-                newAddress = new Address();
-                Console.WriteLine("Street:");
-                newAddress.Street = Console.ReadLine();
-                Console.WriteLine("City:");
-                newAddress.City = Console.ReadLine();
-                Console.WriteLine("State:");
-                newAddress.State = Console.ReadLine();
-                Console.WriteLine("Country:");
-                newAddress.Country = Console.ReadLine();
-                Console.WriteLine("Postal Code:");
-                newAddress.PostalCode = Console.ReadLine();
-                newCustomer.CustBillAddress = newAddress;
-            }
 
-            _customerBL.AddCustomer(newCustomer);
-            Console.WriteLine("Customer Successfully Created!");
-            
-        }
-
-        public void GetCustomers() {
+        public Customer FindCustomer(string _customerEmail) {
+            ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
             foreach (var item in _customerBL.GetCustomers())
             {
-                Console.WriteLine(item.ToString());
+                if (item.CustEmail == _customerEmail) {
+                    Console.WriteLine(item);
+                    return item;
+                }
             }
-            Console.WriteLine("Press any key to continue");
-            Console.ReadLine();
-        }
-
-        public void GetOrderHistory() {
-
-        }
-
-        public void GetCart() {
-
-        }
-
-        public void CompletePurchase() {
-
-        }
-
-        public void ExitRemarks() {
-            Console.WriteLine("Exiting Store");
+            return null;
         }
     }
 }
