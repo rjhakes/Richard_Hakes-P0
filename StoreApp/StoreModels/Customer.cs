@@ -16,7 +16,7 @@ namespace StoreModels
         private Address custShipAddress;
         private Address custBillAddress;
         private List<Item> custCart;
-        //Order History
+        private List<Order> orderHistory;
 
 
         public string CustName { 
@@ -96,10 +96,20 @@ namespace StoreModels
         }
 
         public List<Item> CustCart { 
-            get; 
-            set; 
+            get { return custCart; } 
+            set {
+                if (value == null) {
+                    //todo throw exception
+                }
+                custCart = value;
+            }
+        }
+
+        public List<Order> OrderHistory {
+            get;
+            set;
         }
         
-        public override string ToString() => $"Customer Details: \n\t Name: {this.CustName} \n\t Email: {this.CustEmail} \n\t Phone: {this.CustPhoneNumber} \n\t Address-- {this.CustShipAddress.ToString()}";
+        public override string ToString() => $"Customer Details: \n\t Name:\t\t{this.CustName} \n\t User Name:\t{this.UserName} \n\t Email:\t\t{this.CustEmail} \n\t Phone:\t\t{this.CustPhoneNumber} \n\t Address-- {this.CustShipAddress.ToString()}";
     }
 }
