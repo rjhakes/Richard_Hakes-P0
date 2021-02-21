@@ -7,9 +7,8 @@ namespace StoreModels
     public class Item
     {
         public Product Product { get; set; }
-
         public int Quantity { get; set; }
 
-        public override string ToString() => $"\tItem: {this.Product.ProductName} \tPrice: {this.Product.Price} \t Quantity: {this.Quantity}";
+        public override string ToString() => $"\tItem: {this.Product.ProductName} \n\t\tPrice: {this.Product.ProductPrice} \n\t\tQuantity: {this.Quantity}\n-------------";
     }
 }

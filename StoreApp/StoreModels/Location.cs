@@ -18,6 +18,6 @@ namespace StoreModels
         public List<Order> OrderHistory { get; set; }
         //TODO: add some property for the location inventory
 
-        public override string ToString() => $"{this.LocationName} \n";
+        public override string ToString() => $"\t Location Name: \t{this.LocationName} \n\t Address-- {this.Address.ToString()}\n";
     }
 }
