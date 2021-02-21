@@ -1,6 +1,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Security;
+using System.Collections.Generic;
 using StoreBL;
 using StoreDL;
 using StoreModels;
@@ -130,6 +131,8 @@ namespace StoreUI
                 newAddress.PostalCode = Console.ReadLine();
                 newCustomer.CustBillAddress = newAddress;
             }
+            newCustomer.CustCart = new List<Item>();
+            newCustomer.OrderHistory = new List<Order>();
             _customerBL.AddCustomer(newCustomer);
             Console.WriteLine("Customer Successfully Created!");
         }
