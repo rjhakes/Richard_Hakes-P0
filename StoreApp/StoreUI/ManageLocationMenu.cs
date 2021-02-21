@@ -53,6 +53,9 @@ namespace StoreUI
                     case "Back":
                         stay = false;
                         break;
+                    case "Exit":
+                        System.Environment.Exit(1);
+                        break;
                     default:
                         Console.Clear();
                         Console.WriteLine("Invalid input! Please select a menu option (0, 1, ..., n, Back)");
