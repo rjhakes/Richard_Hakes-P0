@@ -7,11 +7,15 @@ namespace StoreUI
     class CustomerMenu : AMenu, IMenu
     {
         private readonly string _menu;
+        private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
+        private IProductBL _productBL = new ProductBL(new ProductRepoFile());
+        private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
         public override string MenuPrint {
             get { return _menu; }
         }
 
         private Customer _user;
+        private Location _location;
         public CustomerMenu(Customer user) {
             _user = user;
             _menu = "\n" +
@@ -48,7 +52,12 @@ namespace StoreUI
                         GetCustomers();*/
                         break;
                     case "3":
-                        //menu = new LocationSelectionMenu();
+                        GetLocations();
+                        Console.Write("Choose Location Name:\t");
+                        string userLocation = Console.ReadLine();
+                        _location = ChooseLocation(userLocation);
+                        menu = new CustomerLocationMenu(_locationBL, _location, _user);
+                        menu.Start();
                         break;
                     case "Back":
                         stay = false;
@@ -71,6 +80,25 @@ namespace StoreUI
             foreach (var item in _customerBL.GetCustomers())
             {
                 if (item.CustEmail == _customerEmail) {
+                    Console.WriteLine(item);
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public void GetLocations() {
+            foreach (var item in _locationBL.GetLocations()) {
+                Console.WriteLine(item.ToString());
+            }
+            // Console.WriteLine("Press any key to continue");
+            // Console.ReadLine();
+        }
+
+        public Location ChooseLocation(string _locationName) {
+            foreach (var item in _locationBL.GetLocations())
+            {
+                if (item.LocationName == _locationName) {
                     Console.WriteLine(item);
                     return item;
                 }
