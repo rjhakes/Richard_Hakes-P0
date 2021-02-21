@@ -16,9 +16,9 @@ namespace StoreUI
             _user = user;
             _menu = "\n" +
                     "\n[0] View My Account Information" +
-                    "\n[1] View My Order History" +
-                    "\n{2] View My Cart and Finalize Purchase" +
-                    "\n[3]" +
+                    "\n{1] View My Cart and Finalize Purchase" +
+                    "\n[2] View My Order History" +
+                    "\n[3] Choose Location and Shop" +
                     "\n[Back] Previous Menu" +
                     "\n[Exit] Exit App";
         }
@@ -27,7 +27,7 @@ namespace StoreUI
             Boolean stay = true;
             do {
                 Console.Clear();
-                Console.WriteLine(_menu);
+                Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a #, 'Back' or 'Exit': ");
                 string userInput = Console.ReadLine();
 
@@ -40,12 +40,16 @@ namespace StoreUI
                         Console.ReadLine();
                         break;
                     case "1":
-                        //CreateCustomer();
+                        menu = new CustomerCartMenu(_user);
+                        menu.Start();
                         break;
-                    /*case "2":
-                        Console.Clear();
-                        GetCustomers();
-                        break;*/
+                    case "2":
+                        /*Console.Clear();
+                        GetCustomers();*/
+                        break;
+                    case "3":
+                        //menu = new LocationSelectionMenu();
+                        break;
                     case "Back":
                         stay = false;
                         break;
