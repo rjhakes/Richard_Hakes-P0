@@ -27,6 +27,7 @@ namespace StoreUI
             Boolean stay = true;
             do {
                 Console.Clear();
+                Console.WriteLine("Customer Cart");
                 foreach(var item in _user.CustCart) {
                     Console.WriteLine(item);
                 }
