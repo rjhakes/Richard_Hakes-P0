@@ -10,6 +10,7 @@ namespace StoreUI
         private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
         private IProductBL _productBL = new ProductBL(new ProductRepoFile());
         private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
+        private IOrderBL _orderBL = new OrderBL(new OrderRepoFile());
         public override string MenuPrint {
             get { return _menu; }
         }
@@ -20,7 +21,7 @@ namespace StoreUI
             _user = user;
             _menu = "\n" +
                     "\n[0] View My Account Information" +
-                    "\n{1] View My Cart and Finalize Purchase" +
+                    "\n[1] View My Cart and Finalize Purchase" +
                     "\n[2] View My Order History" +
                     "\n[3] Choose Location and Shop" +
                     "\n[Back] Previous Menu" +
@@ -44,12 +45,14 @@ namespace StoreUI
                         Console.ReadLine();
                         break;
                     case "1":
+                        //Implement CustomerCartMenu
                         menu = new CustomerCartMenu(_user);
                         menu.Start();
                         break;
                     case "2":
-                        /*Console.Clear();
-                        GetCustomers();*/
+                        Console.Clear();
+                        GetCustomerOrderHistory();
+                        Console.ReadLine();
                         break;
                     case "3":
                         GetLocations();
@@ -104,6 +107,20 @@ namespace StoreUI
                 }
             }
             return null;
+        }
+
+        public void GetCustomerOrderHistory() {
+            foreach (var item in _orderBL.GetOrders()) {
+                /*Console.WriteLine("Getting Customer Order History");
+                Console.WriteLine(item.ToString());*/
+                
+                if (item.Customer.Equals(_user)) {
+                    Console.WriteLine($"{item}\n---------------");
+                }
+                
+            }
+            
+            Console.ReadLine();
         }
     }
 }
