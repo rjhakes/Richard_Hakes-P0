@@ -32,7 +32,7 @@ namespace StoreUI
             Boolean stay = true;
             do {
                 Console.Clear();
-                Console.WriteLine($"Shopping at {_storeLocation.LocationName} Store");
+                Console.WriteLine($"Managing at {_storeLocation.LocationName} Store");
                 GetInventory();
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a number: ");
