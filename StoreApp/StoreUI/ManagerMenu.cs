@@ -58,6 +58,8 @@ namespace StoreUI
                         break;
                     case "1":
                         GetCustomers();
+                        Console.WriteLine("Press any key to continue");
+                        Console.ReadLine();
                         break;
                     case "2":
                         GetLocations();
