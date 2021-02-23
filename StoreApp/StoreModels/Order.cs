@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace StoreModels
 {
@@ -7,16 +8,71 @@ namespace StoreModels
     /// </summary>
     public class Order
     {
+        private string date;
         private Customer customer;
-        private Location location;
+        private string locationName;
+        private Address locationAddress;
         private List<Item> cart;
         private double total;
 
-        public Customer Customer { get; set; }
-        public Location Location { get; set; }
-        public List<Item> Cart { get; set; }
-        public double Total { get; set; }
 
-        //TODO: add a property for the order items
+        public string Date {
+            get { return date; }
+            set { 
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("");
+                }
+                date = value;
+            }
+        }
+        public Customer Customer { 
+            get { return customer; } 
+            set {
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("Customer name cannot be empty or null");
+                }
+                customer = value;
+            } 
+        }
+        public string LocationName {
+            get { return locationName; } 
+            set {
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("");
+                }
+                locationName = value;
+            } 
+        }
+
+        public Address LocationAddress {
+            get { return locationAddress; } 
+            set {
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("");
+                }
+                locationAddress = value;
+            } 
+        }
+
+        public List<Item> Cart { 
+            get { return cart; } 
+            set {
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("");
+                }
+                cart = value;
+            } 
+        }
+        public double Total {
+            get { return total; } 
+            set {
+                if (value == null || value.Equals("")) {
+                    throw new ArgumentNullException("");
+                }
+                total = value;
+            } 
+        }
+
+        public override string ToString() => $"\n\tDate:\t\t\t{this.Date}\n\tLocation Name\t\t{this.LocationName}\n\tLocation Address--\t{this.LocationAddress}\n\tCart:\t{this.Cart}\n\tTotal:\t{this.Total}";
     }
 }
