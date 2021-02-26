@@ -73,6 +73,6 @@ namespace StoreModels
             } 
         }
 
-        public override string ToString() => $"\n\tDate:\t\t\t{this.Date}\n\tLocation Name\t\t{this.LocationName}\n\tLocation Address--\t{this.LocationAddress}\n\tCart:\t{this.Cart}\n\tTotal:\t{this.Total}";
+        public override string ToString() => $"\n\tDate:\t\t\t{this.Date}\n\tLocation Name\t\t{this.LocationName}\n\tLocation Address--\t{this.LocationAddress}"; //\n\tCart:\t{this.Cart}\n\tTotal:\t{this.Total}";
     }
 }
