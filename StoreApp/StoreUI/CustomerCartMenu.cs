@@ -28,9 +28,9 @@ namespace StoreUI
             do {
                 Console.Clear();
                 Console.WriteLine("Customer Cart");
-                foreach(var item in _user.CustCart) {
+                /*foreach(var item in _user.CustCart) {
                     Console.WriteLine(item);
-                }
+                }*/
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a #, 'Back' or 'Exit': ");
                 string userInput = Console.ReadLine();

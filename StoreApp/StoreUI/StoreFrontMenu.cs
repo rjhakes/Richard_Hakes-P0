@@ -1,17 +1,20 @@
 using System;
 using StoreBL;
 using StoreDL;
+using Entity = StoreDL.Entities;
 using StoreModels;
 namespace StoreUI
 {
     class StoreFrontMenu : AMenu, IMenu
     {
         private readonly string _menu;
+        private readonly Entity.StoreDBContext _context;
         public override string MenuPrint {
             get { return _menu; }
         }
 
-        public StoreFrontMenu() {
+        public StoreFrontMenu(Entity.StoreDBContext context) {
+            _context = context;
             _menu = "\nWelcome to my Store App! \nAre you a customer or manager?" +
                     "\n[0] Customer" +
                     "\n[1] Manager" +
@@ -29,7 +32,7 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        menu = new CustomerLoginMenu(new CustomerBL(new CustomerRepoFile()));
+                        menu = new CustomerLoginMenu(new CustomerBL(new CustomerRepoDB(_context, new CustomerMapper())));
                         menu.Start();
                         break;
                     case "1":

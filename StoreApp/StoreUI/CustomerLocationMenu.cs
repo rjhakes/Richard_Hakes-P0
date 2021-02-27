@@ -8,9 +8,9 @@ namespace StoreUI
     class CustomerLocationMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        private IProductBL _productBL = new ProductBL(new ProductRepoFile());
-        private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
-        private IOrderBL _orderBL = new OrderBL(new OrderRepoFile());
+        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
+        //private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
+        //private IOrderBL _orderBL = new OrderBL(new OrderRepoFile());
         private ILocationBL _locationBL;
         private Location _storeLocation;
         private Customer _user;
@@ -18,10 +18,10 @@ namespace StoreUI
         public override string MenuPrint {
             get { return _menu; }
         }
-        public CustomerLocationMenu(ILocationBL locationBL, Location storeLocation, Customer user) {
-            _locationBL = locationBL;
+        public CustomerLocationMenu() { //ILocationBL locationBL, Location storeLocation, Customer user) {
+            /*_locationBL = locationBL;
             _storeLocation = storeLocation;
-            _user = user;
+            _user = user;*/
             _menu = "\n" +
                     "\n[View] View Cart and finalize purchase" +
                     "\n[Back] Previous Menu" +
@@ -44,15 +44,15 @@ namespace StoreUI
                     switch(userInput) {
                         case "View":
                             //TODO move to CustomerCartMenu
-                            ViewCart();
-                            if (_user.CustCart.Count > 0) {
+                            //ViewCart();
+                            /*if (_user.CustCart.Count > 0) {
                                 Console.WriteLine("Would you like to finalize your purchase? (y/n)"); 
                                 if (Console.ReadLine().Equals("y")) {
                                     CompletePurchase();
                                     Console.WriteLine("\nPurchase Complete!\nPress Enter to return to menu");
                                     Console.ReadLine();
                                 }
-                            }
+                            }*/
                             
                             break;
                         case "Back":
@@ -87,14 +87,14 @@ namespace StoreUI
             Console.Write($"Enter Quantity limited to {_storeLocation.Inventory[i].Quantity}: ");
             ChooseItem.Quantity = int.Parse(Console.ReadLine());
             Console.WriteLine(ChooseItem.Quantity);
-            _storeLocation.Inventory[i].Quantity -= ChooseItem.Quantity;
-            _user.CustCart.Add(ChooseItem);
+            /*_storeLocation.Inventory[i].Quantity -= ChooseItem.Quantity;
+            _user.CustCart.Add(ChooseItem);*/
         }
 
         public void ViewCart() {
-            foreach (var item in _user.CustCart) {
+            /*foreach (var item in _user.CustCart) {
                 Console.WriteLine(item);
-            }
+            }*/
             Console.ReadLine();
         }
 
@@ -107,19 +107,19 @@ namespace StoreUI
 
         public double SumCharges() {
             double TotalCharge = 0;
-            foreach (var item in _user.CustCart) {
+            /*foreach (var item in _user.CustCart) {
                 TotalCharge += item.Product.ProductPrice * item.Quantity;
-            }
+            }*/
             return TotalCharge;
         }
 
         public void LineItems() {
             int i = 0;
-            foreach (var item in _user.CustCart)
+            /*foreach (var item in _user.CustCart)
             {
                 Console.WriteLine($"[{i}] {item.ToString()}");
                 i++;
-            }
+            }*/
         }
 
         public void CreateOrder() {
@@ -127,13 +127,13 @@ namespace StoreUI
             newOrder.Customer = _user;
             newOrder.LocationName = _storeLocation.LocationName;
             newOrder.LocationAddress = _storeLocation.Address;
-            newOrder.Cart = _user.CustCart;
+            //newOrder.Cart = _user.CustCart;
             newOrder.Total = SumCharges();
-            _orderBL.AddOrder(newOrder);
+            //_orderBL.AddOrder(newOrder);
         }
 
         public void EmptyCart() {
-            _user.CustCart = new List<Item>();
+            //_user.CustCart = new List<Item>();
         }
     }
 }

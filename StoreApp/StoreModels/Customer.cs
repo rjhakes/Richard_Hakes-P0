@@ -9,17 +9,18 @@ namespace StoreModels
     {
         //TODO: add more properties to identify the customer
         private string custName;
-        private string userName;
+        //private string userName;
         private string savedPasswordHash;
         private string custEmail;
         private string custPhoneNumber;
-        private Address custShipAddress;
-        private Address custBillAddress;
-        private List<Item> custCart;
-        private List<Order> orderHistory;
+        private string custAddress;
+
+        //private Address custBillAddress;
+        //private List<Item> custCart;
+        //private List<Order> orderHistory;
 
 
-        public string CustName { 
+        public string CustomerName { 
             get { return custName; } 
             set {
                 if (value == null || value.Equals("")) {
@@ -29,7 +30,7 @@ namespace StoreModels
             } 
         }
 
-        public string CustEmail { 
+        public string CustomerEmail { 
             get {
                 return custEmail;
             } 
@@ -42,7 +43,7 @@ namespace StoreModels
         
         }
 
-        public string UserName {
+        /*public string UserName {
             get { return userName; }
             set {
                 if (value.Equals(null)) {
@@ -50,9 +51,9 @@ namespace StoreModels
                 }
                 userName = value;
             }
-        }
+        }*/
 
-        public string SavedPasswordHash {
+        public string CustomerPasswordHash {
             get { return savedPasswordHash; }
             set {
                 if (value.Equals(null)) {
@@ -62,7 +63,7 @@ namespace StoreModels
             }
         }
 
-        public string CustPhoneNumber { 
+        public string CustomerPhone { 
             get {
                 return custPhoneNumber;
             } 
@@ -75,17 +76,19 @@ namespace StoreModels
             } 
         }
 
-        public Address CustShipAddress { 
-            get { return custShipAddress; }
+        public string CustomerAddress { 
+            get { return custAddress; }
             set {
                 if (value.Equals(null)) {
                     //TODO: throw exception
                 }
-                custShipAddress = value;
+                custAddress = value;
             } 
         }
 
-        public Address CustBillAddress { 
+        public int? Id { get; set; }
+
+        /*public Address CustBillAddress { 
             get { return custBillAddress; }
             set {
                 if (value.Equals(null)) {
@@ -108,14 +111,14 @@ namespace StoreModels
         public List<Order> OrderHistory {
             get;
             set;
-        }
+        }*/
         
-        public override string ToString() => $"Customer Details: \n\t Name:\t\t{this.CustName} \n\t User Name:\t{this.UserName} \n\t Email:\t\t{this.CustEmail} \n\t Phone:\t\t{this.CustPhoneNumber} \n\t Address-- {this.CustShipAddress.ToString()}";
+        public override string ToString() => $"Customer Details: \n\t Name:\t\t{this.CustomerName} \n\t Email:\t\t{this.CustomerEmail} \n\t Phone:\t\t{this.CustomerPhone} \n\t Address:\t{this.CustomerAddress.ToString()}";
         public bool Equals(Customer value) {
             if (value == null) {
                 return false;
             }
-            return value.CustName == this.CustName && value.UserName == this.UserName && value.CustEmail == this.CustEmail && value.CustPhoneNumber == this.CustPhoneNumber;
+            return value.CustomerName == this.CustomerName && value.CustomerEmail == this.CustomerEmail && value.CustomerPhone == this.CustomerPhone;
         }
     }
 }
