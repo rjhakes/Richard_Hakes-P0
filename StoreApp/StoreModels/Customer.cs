@@ -113,7 +113,7 @@ namespace StoreModels
             set;
         }*/
         
-        public override string ToString() => $"Customer Details: \n\t Name:\t\t{this.CustomerName} \n\t Email:\t\t{this.CustomerEmail} \n\t Phone:\t\t{this.CustomerPhone} \n\t Address:\t{this.CustomerAddress.ToString()}";
+        public override string ToString() => $"\n\tName:\t{this.CustomerName}\n\tEmail:\t{this.CustomerEmail}\n\tPhone:\t{this.CustomerPhone}\n\tAddress:\t{this.CustomerAddress.ToString()}";
         public bool Equals(Customer value) {
             if (value == null) {
                 return false;

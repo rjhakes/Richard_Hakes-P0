@@ -7,30 +7,42 @@ namespace StoreModels
     /// </summary>
     public class Location
     {
-        private Address address;
-        private string locationName;
-        private List<Item> inventory;
-        private List<Order> orderHistory;
+        private string locAddress;
+        private string locName;
+        private string locPhone;
+        // private List<Item> inventory;
+        // private List<Order> orderHistory;
 
-        public Address Address { 
-            get {return address;}
+        public int? Id { get; set; }
+
+        public string LocAddress { 
+            get {return locAddress;}
             set {
                 if (value == null) {
                     //todo: throw exception
                 }
-                address = value;
+                locAddress = value;
             }
         }
-        public string LocationName { 
-            get {return locationName;} 
+        public string LocName { 
+            get {return locName;} 
             set {
                 if (value == null) {
                     //todo:throw exception
                 }
-                locationName = value;
+                locName = value;
             }
         }
-        public List<Item> Inventory { 
+        public string LocPhone { 
+            get {return locPhone;} 
+            set {
+                if (value == null) {
+                    //todo:throw exception
+                }
+                locPhone = value;
+            }
+        }
+        /*public List<Item> Inventory { 
             get {return inventory;}
             set {
                 if (value == null) {
@@ -47,10 +59,10 @@ namespace StoreModels
                 }
                 orderHistory = OrderHistory;
             }
-            }
+        }*/
 
         //TODO: add some property for the location inventory
 
-        public override string ToString() => $"\t Location Name: \t{this.LocationName} \n\t Address-- {this.Address.ToString()}\n";
+        public override string ToString() => $"\tLocation Name:\t{this.LocName}\n\tLocation Phone:\t{this.LocPhone}\n\tAddress:\t{this.LocAddress.ToString()}\n";
     }
 }

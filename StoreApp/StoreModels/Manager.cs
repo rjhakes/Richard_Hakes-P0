@@ -7,7 +7,9 @@ namespace StoreModels
         private string managerEmail;
         private string savedPasswordHash;
         private string managerPhoneNumber;
-        private Location managerLocation;
+        private int managerLocId;
+        
+        public int? Id { get; set; }
 
         public string ManagerName { 
             get {return managerName;}
@@ -27,7 +29,7 @@ namespace StoreModels
                 managerEmail = value;
             } 
          }
-        public string SavedPasswordHash { 
+        public string ManagerPasswordHash { 
             get { return savedPasswordHash; }
             set {
                 if (value.Equals(null)) {
@@ -36,7 +38,7 @@ namespace StoreModels
                 savedPasswordHash = value;
             }
          }
-        public string ManagerPhoneNumber { 
+        public string ManagerPhone { 
             get {
                 return managerPhoneNumber;
             } 
@@ -48,16 +50,16 @@ namespace StoreModels
                 managerPhoneNumber = value;
             } 
          } 
-        public Location ManagerLocation { 
-            get {return managerLocation;}
+        public int ManagerLocId { 
+            get {return managerLocId;}
             set {
                 if (value == null) {
                     //todo: throw exception
                 }
-                managerLocation = value;
+                managerLocId = value;
             }
         }
 
-        public override string ToString() => $"Manager Details: \n\t Name: {this.ManagerName} \n\t Email: {this.ManagerEmail} \n\t Phone: {this.ManagerPhoneNumber}";
+        public override string ToString() => $"\n\t Name:\t{this.ManagerName}\n\tEmail:\t{this.ManagerEmail}\n\tPhone:\t{this.ManagerPhone}";
     }
 }
