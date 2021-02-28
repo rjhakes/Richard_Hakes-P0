@@ -22,9 +22,9 @@ namespace StoreBL
         {
             _repo.DeleteCustomer(customer2BDeleted);
         }
-        public Customer GetCustomerByName(string name) {
+        public Customer GetCustomerByEmail(string name) {
             //todo validate
-            return _repo.GetCustomerByName(name);
+            return _repo.GetCustomerByEmail(name);
         }
         public List<Customer> GetCustomers()
         {
