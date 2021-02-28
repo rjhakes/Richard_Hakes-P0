@@ -18,10 +18,26 @@ namespace StoreBL
             //TODO: Add BL
             _repo.AddLocation(newLocation);
         }
+        public void DeleteLocation(Location location2BDeleted)
+        {
+            _repo.DeleteLocation(location2BDeleted);
+        }
+        public Location GetLocationByName(string name) {
+            //todo validate
+            return _repo.GetLocationByName(name);
+        }
         public List<Location> GetLocations()
         {
             //TODO Add BL
             return _repo.GetLocations();
+        }
+        public void UpdateLocation(Location location2BUpdated, Location updatedDetails)
+        {
+            location2BUpdated.LocName = updatedDetails.LocName;
+            location2BUpdated.LocPhone = updatedDetails.LocPhone;
+            location2BUpdated.LocAddress = updatedDetails.LocAddress;
+
+            _repo.UpdateLocation(location2BUpdated);
         }
     }
 }

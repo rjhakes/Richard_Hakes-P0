@@ -7,5 +7,8 @@ namespace StoreBL
     {
         List<Location> GetLocations();
         void AddLocation(Location newLocation);
+        Location GetLocationByName(string name);
+        void DeleteLocation(Location location2BDeleted);
+        void UpdateLocation(Location location2BUpdated, Location updatedDetails);
     }
 }
