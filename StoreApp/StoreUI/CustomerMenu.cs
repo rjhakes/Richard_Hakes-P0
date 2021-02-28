@@ -17,9 +17,12 @@ namespace StoreUI
 
         private Customer _user;
         private ICustomerBL _customerBL;
-        public CustomerMenu(Customer user, ICustomerBL customerBL) {
+        private ILocationBL _locationBL;
+        private Location _location;
+        public CustomerMenu(Customer user, ICustomerBL customerBL, ILocationBL locationBL) {
             _user = user;
             _customerBL = customerBL;
+            _locationBL = locationBL;
             _menu = $"Account Info--\n\tName:\t\t{_user.CustomerName}\n\tEmail:\t\t{_user.CustomerEmail}\n\tPhone:\t\t{_user.CustomerPhone}\n\tAddress:\t{_user.CustomerAddress}" +
 
                     "\n" +
@@ -61,9 +64,9 @@ namespace StoreUI
                         GetLocations();
                         Console.Write("Choose Location Name:\t");
                         string userLocation = Console.ReadLine();
-                        //_location = ChooseLocation(userLocation);
-                        //menu = new CustomerLocationMenu(_locationBL, _location, _user);
-                        //menu.Start();
+                        _location = _locationBL.GetLocationByName(userLocation);
+                        menu = new CustomerLocationMenu( _user, _customerBL, _location, _locationBL);
+                        menu.Start();
                         break;
                     case "Back":
                         stay = false;

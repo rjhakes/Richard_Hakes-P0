@@ -13,8 +13,13 @@ namespace StoreUI
             get { return _menu; }
         }
 
-        public StoreFrontMenu(Entity.StoreDBContext context) {
-            _context = context;
+        private IManagerBL _managerBL;
+        private ICustomerBL _customerBL;
+        private ILocationBL _locationBL;
+        public StoreFrontMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
+            _managerBL = managerBL;
+            _customerBL = customerBL;
+            _locationBL = locationBL;
             _menu = "\nWelcome to my Store App! \nAre you a customer or manager?" +
                     "\n[0] Customer" +
                     "\n[1] Manager" +
@@ -32,11 +37,11 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        menu = new CustomerLoginMenu(new CustomerBL(new CustomerRepoDB(_context, new CustomerMapper())));
+                        menu = new CustomerLoginMenu(_customerBL, _locationBL);
                         menu.Start();
                         break;
                     case "1":
-                        menu = new ManagerLoginMenu(new ManagerBL(new ManagerRepoFile()));
+                        menu = new ManagerLoginMenu(_managerBL, _customerBL, _locationBL);
                         menu.Start();
                         break;
                     case "Exit":

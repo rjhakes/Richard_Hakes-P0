@@ -8,17 +8,23 @@ namespace StoreUI
     class ManagerMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
-        private IProductBL _productBL = new ProductBL(new ProductRepoFile());
-        private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
-        private Manager _manager;
-        private Location _location;
+        //private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
+        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
+        //private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
+        
+        //private Location _location;
         public override string MenuPrint {
             get { return _menu; }
         }
-                
-        public ManagerMenu(Manager manager) {
-            _manager = manager;
+        private Manager _user;
+        private IManagerBL _managerBL;
+        private ICustomerBL _customerBL;
+        private ILocationBL _locationBL;
+        public ManagerMenu(Manager manager, IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
+            _user = manager;
+            _managerBL = managerBL;
+            _customerBL = customerBL;
+            _locationBL = locationBL;
             _menu = "\n" +
                     "\n[0] Find Customer" +
                     "\n[1] View Customers" +
@@ -35,7 +41,7 @@ namespace StoreUI
             Boolean stay = true;
             do {
                 Console.Clear();
-                Console.WriteLine($"Welcome {_manager.ManagerName}\n");
+                Console.WriteLine($"Welcome {_user.ManagerName}");
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a #, 'Back' or 'Exit': ");
                 string userInput = Console.ReadLine();
@@ -43,28 +49,49 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        Console.Clear();
-                        Console.Write("Find Customer\n\tEmail:\t");
                         try {
-                            userInput = Console.ReadLine();
-                            Customer _customer = FindCustomer(userInput);
-                            _customer.ToString();
-                        } catch (Exception e) {
+                            SearchCustomers();
+                            
+                        } catch (Exception e) 
+                        {
                             //log.WriteLine(e);
                             Console.WriteLine($"We have no record of {userInput} as a Customer");
-                        } finally {
+                        } finally 
+                        {
+                            Console.WriteLine("Press any key to continue");
                             Console.ReadLine();
                         }
                         break;
                     case "1":
-                        GetCustomers();
-                        Console.WriteLine("Press any key to continue");
-                        Console.ReadLine();
+                        try
+                        {
+                            GetCustomers();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Exception: {e}");
+                        }
+                        finally
+                        {
+                            Console.WriteLine("Press any key to continue");
+                            Console.ReadLine();
+                        }
+                        
                         break;
                     case "2":
-                        GetLocations();
-                        Console.WriteLine("Press any key to continue");
-                        Console.ReadLine();
+                        try
+                        {
+                            GetLocations();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Exception: {e}");
+                        }
+                        finally
+                        {
+                            Console.WriteLine("Press any key to continue");
+                            Console.ReadLine();
+                        }
                         break;
                     case "3":
                         CreateLocation();
@@ -80,9 +107,9 @@ namespace StoreUI
                         GetLocations();
                         Console.Write("Choose Location Name:\t");
                         string userLocation = Console.ReadLine();
-                        _location = ChooseLocation(userLocation);
-                        menu = new ManageLocationMenu(_locationBL, _location);
-                        menu.Start();
+                        //_location = ChooseLocation(userLocation);
+                        //menu = new ManageLocationMenu(_locationBL, _location);
+                        //menu.Start();
                         break;
                     case "Back":
                         stay = false;
@@ -101,68 +128,51 @@ namespace StoreUI
             
         }
 
-        public Customer FindCustomer(string _customerEmail) {
-            //ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
-            foreach (var item in _customerBL.GetCustomers())
-            {
-                if (item.CustEmail == _customerEmail) {
-                    Console.WriteLine(item);
-                    return item;
-                }
+        public void SearchCustomers()
+        {
+            Console.Clear();
+            Console.Write("Enter Customer Email:\t");
+            Customer foundCustomer = _customerBL.GetCustomerByEmail(Console.ReadLine());
+            if(foundCustomer == null) {
+                Console.WriteLine("No such customer found");
+            } else {
+                Console.Clear();
+                Console.WriteLine("Customer Details---");
+                Console.WriteLine(foundCustomer.ToString());
             }
-            return null;
         }
 
         public void GetCustomers() {
+            Console.Clear();
+            Console.WriteLine("Customer List---");
             foreach (var item in _customerBL.GetCustomers())
             {
                 Console.WriteLine(item.ToString());
             }
         }
 
-        public void GetLocations() {
+        public void GetLocations() 
+        {
+            Console.Clear();
+            Console.WriteLine("Location List---");
             foreach (var item in _locationBL.GetLocations()) {
                 Console.WriteLine(item.ToString());
             }
-            // Console.WriteLine("Press any key to continue");
-            // Console.ReadLine();
+
         }
 
-        public void CreateLocation() {
-            
-            Location newLocation = new Location();
-            Console.WriteLine("Enter Location Name: ");
-            newLocation.LocationName = Console.ReadLine();
-            Console.WriteLine("Enter Location Address: ");
-            Address newAddress = new Address();
-            Console.WriteLine("Street:");
-            newAddress.Street = Console.ReadLine();
-            Console.WriteLine("City:");
-            newAddress.City = Console.ReadLine();
-            Console.WriteLine("State:");
-            newAddress.State = Console.ReadLine();
-            Console.WriteLine("Country:");
-            newAddress.Country = Console.ReadLine();
-            Console.WriteLine("Postal Code:");
-            newAddress.PostalCode = Console.ReadLine();
-            newLocation.Address = newAddress;
-            List<Item> inventory = new List<Item>();
-            Item newItem;
-            foreach (var item in _productBL.GetProducts()) {
-                newItem = new Item();
-                newItem.Product = item;
-                newItem.Quantity = 20;
-                inventory.Add(newItem);
-            }
-            newLocation.Inventory = inventory;
-            _locationBL.AddLocation(newLocation);
+        public void CreateLocation() 
+        {
+            _locationBL.AddLocation(GetLocationDetails());
+            Console.WriteLine("Location Successfully Created!");
         }
 
-        public void GetProducts() {
-            foreach (var item in _productBL.GetProducts())
+        public void GetProducts() 
+        {
+            /*foreach (var item in _productBL.GetProducts())
             {
                 Console.WriteLine(item.ToString());
-            }
+            }*/
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
         }
@@ -182,19 +192,50 @@ namespace StoreUI
             newProduct.CategoryType = Enum.Parse<Category>(Console.ReadLine()); 
             Console.Write("Brand Name:\t");
             newProduct.BrandName = Console.ReadLine();
-            _productBL.AddProduct(newProduct);
+            //_productBL.AddProduct(newProduct);
 
         }
 
         public Location ChooseLocation(string _locationName) {
-            foreach (var item in _locationBL.GetLocations())
+            /*foreach (var item in _locationBL.GetLocations())
             {
                 if (item.LocationName == _locationName) {
                     Console.WriteLine(item);
                     return item;
                 }
-            }
+            }*/
             return null;
+        }
+
+        private Location GetLocationDetails()
+        {
+            Location newLocation = new Location();
+            Console.WriteLine("Enter Location Name:\n\t");
+            newLocation.LocName = Console.ReadLine();
+            Console.Write("Enter Location Phone:\n\t");
+            newLocation.LocPhone = Console.ReadLine();
+            string newAddress = "";
+            Console.WriteLine("Enter Customer Address--");
+            Console.Write("\t\tStreet:\t");
+            newAddress += Console.ReadLine();
+            Console.Write("\t\tCity:\t");
+            newAddress += ", " + Console.ReadLine();
+            Console.Write("\t\tState:\t");
+            newAddress += ", " + Console.ReadLine();
+            Console.Write("\t\tZip:\t");
+            newAddress += " " + Console.ReadLine();
+            newLocation.LocAddress = newAddress;
+            return newLocation;
+            //List<Item> inventory = new List<Item>();
+            //Item newItem;
+            /*foreach (var item in _productBL.GetProducts()) {
+                newItem = new Item();
+                newItem.Product = item;
+                newItem.Quantity = 20;
+                inventory.Add(newItem);
+            }*/
+            //newLocation.Inventory = inventory;
+            //_locationBL.AddLocation(newLocation);
         }
     }
 }
