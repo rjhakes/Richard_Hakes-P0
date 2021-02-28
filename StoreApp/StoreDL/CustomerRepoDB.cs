@@ -9,8 +9,8 @@ namespace StoreDL
     public class CustomerRepoDB : ICustomerRepository
     {
         private Entity.StoreDBContext _context;
-        private IMapper _mapper;
-        public CustomerRepoDB(Entity.StoreDBContext context, IMapper mapper)
+        private ICustomerMapper _mapper;
+        public CustomerRepoDB(Entity.StoreDBContext context, ICustomerMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -29,13 +29,13 @@ namespace StoreDL
             return customer2BDeleted;
         }
 
-        public Customer GetCustomerByName(string name)
+        public Customer GetCustomerByEmail(string name)
         {
             return _context.Customers
             .AsNoTracking()
             .Select(x => _mapper.ParseCustomer(x))
             .ToList()
-            .FirstOrDefault(x => x.CustomerName == name);
+            .FirstOrDefault(x => x.CustomerEmail == name);
         }
 
         public List<Model.Customer> GetCustomers()

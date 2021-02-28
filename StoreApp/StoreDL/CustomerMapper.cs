@@ -4,7 +4,7 @@ using StoreModels;
 using StoreDL.Entities;
 namespace StoreDL
 {
-    public class CustomerMapper : IMapper
+    public class CustomerMapper : ICustomerMapper
     {
         public Model.Customer ParseCustomer(Entity.Customer customer)
         {

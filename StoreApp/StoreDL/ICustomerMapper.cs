@@ -5,7 +5,7 @@ namespace StoreDL
     /// <summary>
     /// To parse entities from DB to models used in BL and vice versa
     /// </summary>
-    public interface IMapper
+    public interface ICustomerMapper
     {
         Model.Customer ParseCustomer(Entity.Customer customer);
         Entity.Customer ParseCustomer(Model.Customer customer);
