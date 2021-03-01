@@ -16,10 +16,14 @@ namespace StoreUI
         private IManagerBL _managerBL;
         private ICustomerBL _customerBL;
         private ILocationBL _locationBL;
-        public StoreFrontMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
+        public StoreFrontMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
             _managerBL = managerBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\nWelcome to my Store App! \nAre you a customer or manager?" +
                     "\n[0] Customer" +
                     "\n[1] Manager" +
@@ -37,11 +41,11 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        menu = new CustomerLoginMenu(_customerBL, _locationBL);
+                        menu = new CustomerLoginMenu(_customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
                         menu.Start();
                         break;
                     case "1":
-                        menu = new ManagerLoginMenu(_managerBL, _customerBL, _locationBL);
+                        menu = new ManagerLoginMenu(_managerBL, _customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
                         menu.Start();
                         break;
                     case "Exit":

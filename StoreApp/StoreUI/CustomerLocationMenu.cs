@@ -8,23 +8,23 @@ namespace StoreUI
     class CustomerLocationMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
-        //private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
-        //private IOrderBL _orderBL = new OrderBL(new OrderRepoFile());
         private ILocationBL _locationBL;
         private Location _location;
         private Customer _user;
         private ICustomerBL _customerBL;
-        
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
         public override string MenuPrint {
             get { return _menu; }
         }
-        public CustomerLocationMenu(Customer user, ICustomerBL customerBL, Location location, ILocationBL locationBL) 
+        public CustomerLocationMenu(Customer user, ICustomerBL customerBL, Location location, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) 
         {
             _locationBL = locationBL;
             _location = location;
             _user = user;
             _customerBL = customerBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\n" +
                     "\n[View] View Cart and finalize purchase" +
                     "\n[Back] Previous Menu" +
@@ -38,7 +38,7 @@ namespace StoreUI
                 Console.WriteLine($"Shopping at {_location.LocName} Store");
                 Console.WriteLine(_user);
                 Console.WriteLine("-----------------------");
-                //GetInventory();
+                GetInventory();
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter an item number to place item in cart: ");
                 string userInput = Console.ReadLine();
@@ -74,14 +74,19 @@ namespace StoreUI
             } while (stay);
         }
 
-        /*public void GetInventory() {
+        public void GetInventory() {
             int i = 0;
-            foreach (var item in _location.Inventory)
+            Console.WriteLine("Product Details-----");
+            foreach (var item in _inventoryLineItemsBL.GetInventoryLineItems())
             {
-                Console.WriteLine($"[{i}] {item.ToString()}");
-                i++;
+                if (item.InventoryId == _location.Id)
+                {
+                    Console.WriteLine($"[{i}] {_productBL.GetProductById((int)item.ProductId)} {item.ToString()}");
+                    i++;
+                }
+                
             }
-        }*/
+        }
 
         /*public void OrderItem(string _item) {
             //move inventory quantity change to new method

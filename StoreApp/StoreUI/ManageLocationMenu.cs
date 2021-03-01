@@ -7,19 +7,22 @@ namespace StoreUI
     class ManageLocationMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
         private ILocationBL _locationBL;
         private Location _location;
         private Manager _user;
         private IManagerBL _managerBL;
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
         public override string MenuPrint {
             get { return _menu; }
         }
-        public ManageLocationMenu(Manager user, IManagerBL managerBL, Location location, ILocationBL locationBL) {
+        public ManageLocationMenu(Manager user, IManagerBL managerBL, Location location, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
             _locationBL = locationBL;
             _location = location;
             _user = user;
             _managerBL = managerBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\n" +
                     "\n[0] Add All Products to Inventory" +
                     "\n[1] Add a Product to Inventory" +
@@ -37,13 +40,13 @@ namespace StoreUI
             do {
                 Console.Clear();
                 Console.WriteLine($"Managing at {_location.LocName} Store");
-                //GetInventory();
+                GetInventory();
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a number: ");
                 string userInput = Console.ReadLine();
                 switch(userInput) {
                     case "0":
-                        //AddAllProductToInventory();
+                        AddAllProductToInventory();
                         break;
                     case "1":
                         
@@ -52,7 +55,7 @@ namespace StoreUI
                         
                         break;
                     case "3":
-                        
+                        GetInventory();
                         break;
                     case "Back":
                         stay = false;
@@ -70,24 +73,35 @@ namespace StoreUI
             } while (stay);
         }
 
-        /*public void GetInventory() {
+        public void GetInventory() {
             int i = 0;
-            foreach (var item in _location.Inventory)
+            Console.WriteLine("Product Details-----");
+            foreach (var item in _inventoryLineItemsBL.GetInventoryLineItems())
             {
-                Console.WriteLine($"[{i}] {item.ToString()}");
-                i++;
-            }
-        }*/
-
-        /*public void AddAllProductToInventory() {
-            Item newItem;
-            foreach (var item in _productBL.GetProducts()) {
-                newItem = new Item();
-                newItem.Product = item;
-                newItem.Quantity = 20;
-                _location.Inventory.Add(newItem);
+                if (item.InventoryId == _location.Id)
+                {
+                    Console.WriteLine($"[{i}] {_productBL.GetProductById((int)item.ProductId)} {item.ToString()}");
+                    i++;
+                }
                 
             }
-        }*/
+        }
+
+        public void AddAllProductToInventory() {
+            Console.WriteLine("adding products");
+            Console.ReadLine();
+            foreach (var item in _productBL.GetProducts()) {
+                Console.WriteLine(item.ToString());
+            }
+        }
+
+        public InventoryLineItem GetItemDetails(Product item)
+        {
+            InventoryLineItem newLineItem = new InventoryLineItem();
+            newLineItem.InventoryId = _location.Id;
+            newLineItem.ProductId = item.Id;
+            newLineItem.Quantity = 20;
+            return newLineItem;
+        }
     }
 }

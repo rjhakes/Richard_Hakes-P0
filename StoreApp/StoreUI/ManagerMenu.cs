@@ -8,11 +8,6 @@ namespace StoreUI
     class ManagerMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        //private ILocationBL _locationBL = new LocationBL(new LocationRepoFile());
-        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
-        //private ICustomerBL _customerBL = new CustomerBL(new CustomerRepoFile());
-        
-        //private Location _location;
         public override string MenuPrint {
             get { return _menu; }
         }
@@ -20,12 +15,16 @@ namespace StoreUI
         private IManagerBL _managerBL;
         private ICustomerBL _customerBL;
         private ILocationBL _locationBL;
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
         private Location _location;
-        public ManagerMenu(Manager manager, IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
+        public ManagerMenu(Manager manager, IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
             _user = manager;
             _managerBL = managerBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\n" +
                     "\n[0] Find Customer" +
                     "\n[1] View Customers" +
@@ -55,7 +54,6 @@ namespace StoreUI
                             
                         } catch (Exception e) 
                         {
-                            //log.WriteLine(e);
                             Console.WriteLine($"We have no record of {userInput} as a Customer");
                         } finally 
                         {
@@ -109,7 +107,7 @@ namespace StoreUI
                         Console.Write("Choose Location Name:\t");
                         string userLocation = Console.ReadLine();
                         _location = _locationBL.GetLocationByName(userLocation);
-                        menu = new ManageLocationMenu(_user, _managerBL, _location, _locationBL);
+                        menu = new ManageLocationMenu(_user, _managerBL, _location, _locationBL, _productBL, _inventoryLineItemsBL);
                         menu.Start();
                         break;
                     case "Back":
@@ -170,10 +168,10 @@ namespace StoreUI
 
         public void GetProducts() 
         {
-            /*foreach (var item in _productBL.GetProducts())
+            foreach (var item in _productBL.GetProducts())
             {
                 Console.WriteLine(item.ToString());
-            }*/
+            }
             Console.WriteLine("Press any key to continue");
             Console.ReadLine();
         }
@@ -182,30 +180,19 @@ namespace StoreUI
             
             Product newProduct = new Product();
             Console.Write("Product Name:\t");
-            newProduct.ProductName = Console.ReadLine();
+            newProduct.ProdName = Console.ReadLine();
             Console.Write("Price:\t\t");
-            newProduct.ProductPrice = double.Parse(Console.ReadLine());
+            newProduct.ProdPrice = double.Parse(Console.ReadLine());
             Console.Write("\nCategory List:" +
                 "\nBrakes\t\tExhaust\t\tIntake\t\tDrivetrain" +
                 "\nForcedInduction\tStyling\t\tEngine\t\tFueling" +
                 "\nSuspension\tTuningAndGuages\tWheels\t\tAccessories\n\n");
             Console.Write("Category:\t\t");
-            newProduct.CategoryType = Enum.Parse<Category>(Console.ReadLine()); 
+            newProduct.ProdCategory = Enum.Parse<Category>(Console.ReadLine()); 
             Console.Write("Brand Name:\t");
-            newProduct.BrandName = Console.ReadLine();
-            //_productBL.AddProduct(newProduct);
+            newProduct.ProdBrandName = Console.ReadLine();
+            _productBL.AddProduct(newProduct);
 
-        }
-
-        public Location ChooseLocation(string _locationName) {
-            /*foreach (var item in _locationBL.GetLocations())
-            {
-                if (item.LocationName == _locationName) {
-                    Console.WriteLine(item);
-                    return item;
-                }
-            }*/
-            return null;
         }
 
         private Location GetLocationDetails()
@@ -227,16 +214,6 @@ namespace StoreUI
             newAddress += " " + Console.ReadLine();
             newLocation.LocAddress = newAddress;
             return newLocation;
-            //List<Item> inventory = new List<Item>();
-            //Item newItem;
-            /*foreach (var item in _productBL.GetProducts()) {
-                newItem = new Item();
-                newItem.Product = item;
-                newItem.Quantity = 20;
-                inventory.Add(newItem);
-            }*/
-            //newLocation.Inventory = inventory;
-            //_locationBL.AddLocation(newLocation);
         }
     }
 }

@@ -29,7 +29,9 @@ namespace StoreUI
 
             IMenu menu = new StoreFrontMenu(new ManagerBL(new ManagerRepoDB(context, new ManagerMapper())),
                                             new CustomerBL(new CustomerRepoDB(context, new CustomerMapper())),
-                                            new LocationBL(new LocationRepoDB(context, new LocationMapper())));
+                                            new LocationBL(new LocationRepoDB(context, new LocationMapper())),
+                                            new ProductBL(new ProductRepoDB(context, new ProductMapper())),
+                                            new InventoryLineItemBL(new InventoryLineItemRepoDB(context, new InventoryLineItemMapper())));
             menu.Start();
             
         }

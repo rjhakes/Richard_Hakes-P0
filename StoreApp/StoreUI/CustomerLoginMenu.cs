@@ -1,5 +1,4 @@
 using System;
-//using System.Security.Cryptography;
 using System.Security;
 using System.Collections.Generic;
 using StoreBL;
@@ -17,9 +16,13 @@ namespace StoreUI
         private ICustomerBL _customerBL;
         private Customer _customer;
         private ILocationBL _locationBL;
-        public CustomerLoginMenu(ICustomerBL customerBL, ILocationBL locationBL) {
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
+        public CustomerLoginMenu(ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
             _customerBL = customerBL;
             _locationBL = locationBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\n" +
                     "\n[0] Sign In" +
                     "\n[1] Register as Customer" +
@@ -44,7 +47,7 @@ namespace StoreUI
                         {
                             if (Login())
                             {
-                                menu = new CustomerMenu(_customer, _customerBL, _locationBL);
+                                menu = new CustomerMenu(_customer, _customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
                                 menu.Start();
                             }
                             else { _customer = null; }

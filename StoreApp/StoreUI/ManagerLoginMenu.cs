@@ -1,5 +1,4 @@
 using System;
-//using System.Security.Cryptography;
 using StoreModels;
 using StoreBL;
 using StoreDL;
@@ -16,12 +15,16 @@ namespace StoreUI
         private IManagerBL _managerBL;
         private ICustomerBL _customerBL;
         private ILocationBL _locationBL;
+        private IProductBL _productBL;
+        private IInventoryLineItemBL _inventoryLineItemsBL;
         private Manager _manager;
 
-        public ManagerLoginMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
+        public ManagerLoginMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
             _managerBL = managerBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
+            _productBL = productBL;
+            _inventoryLineItemsBL = inventoryLineItemsBL;
             _menu = "\n" +
                     "\n[0] Sign In" +
                     "\n[1] Register as Manager" +
@@ -43,10 +46,9 @@ namespace StoreUI
                     case "0":
                         try
                         {
-                            //Login();
                             if (Login())
                             {
-                                menu = new ManagerMenu(_manager, _managerBL, _customerBL, _locationBL);
+                                menu = new ManagerMenu(_manager, _managerBL, _customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
                                 menu.Start();
                             }
                             else { _manager = null; }
@@ -94,28 +96,6 @@ namespace StoreUI
                 }
             } while (stay);
         }
-
-        /*public void CreateLocation() {
-            Location newLocation = new Location();
-            Console.WriteLine("Enter Location Name: ");
-            newLocation.LocationName = Console.ReadLine();
-            Console.WriteLine("Enter Location Address: ");
-            Address newAddress = new Address();
-            Console.WriteLine("Street:");
-            newAddress.Street = Console.ReadLine();
-            Console.WriteLine("City:");
-            newAddress.City = Console.ReadLine();
-            Console.WriteLine("State:");
-            newAddress.State = Console.ReadLine();
-            Console.WriteLine("Country:");
-            newAddress.Country = Console.ReadLine();
-            Console.WriteLine("Postal Code:");
-            newAddress.PostalCode = Console.ReadLine();
-            newLocation.Address = newAddress;
-            List<Item> inventory = new List<Item>();
-            newLocation.Inventory = inventory;
-            _locationBL.AddLocation(newLocation);
-        }*/
         public void CreateProduct() {
 
         }
@@ -126,7 +106,7 @@ namespace StoreUI
         public void CreateManager() {
             _managerBL.AddManager(GetManagerDetails());
             Console.WriteLine("Manager Successfully Created!");
-            
+            Console.ReadLine();
         }
 
         public void GetManagers() {
