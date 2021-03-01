@@ -6,5 +6,8 @@ namespace StoreDL
     {
         Model.Location ParseLocation(Entity.Location location);
         Entity.Location ParseLocation(Model.Location location);
+
+        Model.Inventory ParseInventory(Entity.Inventory inventory);
+        Entity.Inventory ParseInventory(Model.Inventory inventory);
     }
 }

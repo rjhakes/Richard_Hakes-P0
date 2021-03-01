@@ -2,6 +2,7 @@ using Model = StoreModels;
 using Entity = StoreDL.Entities;
 using StoreModels;
 using StoreDL.Entities;
+using System;
 namespace StoreDL
 {
     public class LocationMapper : ILocationMapper
@@ -13,6 +14,7 @@ namespace StoreDL
                 LocName = location.LocName,
                 LocPhone = location.LocPhone,
                 LocAddress = location.LocAddress,
+                //Inventory = ParseInventory(location.Inventory),
                 Id = location.Id
             };
         }
@@ -26,6 +28,7 @@ namespace StoreDL
                     LocName = location.LocName,
                     LocPhone = location.LocPhone,
                     LocAddress = location.LocAddress,
+                    //Inventory = ParseInventory(location.Inventory)
                 };
             }
 
@@ -34,7 +37,34 @@ namespace StoreDL
                 LocName = location.LocName,
                 LocPhone = location.LocPhone,
                 LocAddress = location.LocAddress,
+                //Inventory = ParseInventory(location.Inventory),
                 Id = (int)location.Id
+            };
+        }
+
+        public Model.Inventory ParseInventory(Entity.Inventory inventory)
+        {
+            return new Model.Inventory
+            {
+                LocId = inventory.LocId,
+                Id = inventory.Id
+            };
+        }
+
+        public Entity.Inventory ParseInventory(Model.Inventory inventory)
+        {
+            if (inventory.Id == null)
+            {
+                return new Entity.Inventory
+                {
+                    LocId = inventory.LocId
+                };
+            }
+            //For updating the superpower, you need the id to find it
+            return new Entity.Inventory
+            {
+                LocId = inventory.LocId,
+                Id = (int)inventory.Id
             };
         }
     }
