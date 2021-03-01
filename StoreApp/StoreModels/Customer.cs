@@ -9,15 +9,10 @@ namespace StoreModels
     {
         //TODO: add more properties to identify the customer
         private string custName;
-        //private string userName;
         private string savedPasswordHash;
         private string custEmail;
         private string custPhoneNumber;
         private string custAddress;
-
-        //private Address custBillAddress;
-        //private List<Item> custCart;
-        //private List<Order> orderHistory;
 
 
         public string CustomerName { 
@@ -42,16 +37,6 @@ namespace StoreModels
             }
         
         }
-
-        /*public string UserName {
-            get { return userName; }
-            set {
-                if (value.Equals(null)) {
-                    //TODO: thhrow Exception
-                }
-                userName = value;
-            }
-        }*/
 
         public string CustomerPasswordHash {
             get { return savedPasswordHash; }
@@ -88,30 +73,6 @@ namespace StoreModels
 
         public int? Id { get; set; }
 
-        /*public Address CustBillAddress { 
-            get { return custBillAddress; }
-            set {
-                if (value.Equals(null)) {
-                    //TODO: throw exception
-                }
-                custBillAddress = value;
-            }
-        }
-
-        public List<Item> CustCart { 
-            get { return custCart; } 
-            set {
-                if (value == null) {
-                    //todo throw exception
-                }
-                custCart = value;
-            }
-        }
-
-        public List<Order> OrderHistory {
-            get;
-            set;
-        }*/
         
         public override string ToString() => $"\n\tName:\t\t{this.CustomerName}\n\tEmail:\t\t{this.CustomerEmail}\n\tPhone:\t\t{this.CustomerPhone}\n\tAddress:\t{this.CustomerAddress.ToString()}";
         public bool Equals(Customer value) {
