@@ -17,12 +17,20 @@ namespace StoreUI
         private Location _location;
         private IProductBL _productBL;
         private IInventoryLineItemBL _inventoryLineItemsBL;
-        public CustomerMenu(Customer user, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
+        private ICustomerCartBL _customerCartBL;
+        private ICustomerOrderLineItemBL _customerOrderLineItem;
+        private ICustomerOrderHistoryBL _customerOrderHistory;
+        public CustomerMenu(Customer user, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL, 
+                            ICustomerCartBL customerCartBL, ICustomerOrderLineItemBL customerOrderLineItem, ICustomerOrderHistoryBL customerOrderHistory) 
+        {
             _user = user;
             _customerBL = customerBL;
             _locationBL = locationBL;
             _productBL = productBL;
             _inventoryLineItemsBL = inventoryLineItemsBL;
+            _customerCartBL = customerCartBL;
+            _customerOrderLineItem = customerOrderLineItem;
+            _customerOrderHistory = customerOrderHistory;
             _menu = $"Account Info--\n\tName:\t\t{_user.CustomerName}\n\tEmail:\t\t{_user.CustomerEmail}\n\tPhone:\t\t{_user.CustomerPhone}\n\tAddress:\t{_user.CustomerAddress}" +
 
                     "\n" +
@@ -57,7 +65,7 @@ namespace StoreUI
                         Console.Write("Choose Location Name:\t");
                         string userLocation = Console.ReadLine();
                         _location = _locationBL.GetLocationByName(userLocation);
-                        menu = new CustomerLocationMenu( _user, _customerBL, _location, _locationBL, _productBL, _inventoryLineItemsBL);
+                        menu = new CustomerLocationMenu( _user, _customerBL, _location, _locationBL, _productBL, _inventoryLineItemsBL, _customerCartBL, _customerOrderLineItem, _customerOrderHistory);
                         menu.Start();
                         break;
                     case "Back":

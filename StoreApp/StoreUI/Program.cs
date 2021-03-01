@@ -31,7 +31,10 @@ namespace StoreUI
                                             new CustomerBL(new CustomerRepoDB(context, new CustomerMapper())),
                                             new LocationBL(new LocationRepoDB(context, new LocationMapper())),
                                             new ProductBL(new ProductRepoDB(context, new ProductMapper())),
-                                            new InventoryLineItemBL(new InventoryLineItemRepoDB(context, new InventoryLineItemMapper())));
+                                            new InventoryLineItemBL(new InventoryLineItemRepoDB(context, new InventoryLineItemMapper())),
+                                            new CustomerCartBL(new CustomerCartRepoDB(context, new CustomerCartMapper())),
+                                            new CustomerOrderLineItemBL(new CustomerOrderLineItemRepoDB(context, new CustomerOrderLineItemMapper())),
+                                            new CustomerOrderHistoryBL(new CustomerOrderHistoryRepoDB(context, new CustomerOrderHistoryMapper())));
             menu.Start();
             
         }

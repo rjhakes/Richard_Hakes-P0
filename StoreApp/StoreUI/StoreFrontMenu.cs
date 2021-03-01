@@ -18,12 +18,19 @@ namespace StoreUI
         private ILocationBL _locationBL;
         private IProductBL _productBL;
         private IInventoryLineItemBL _inventoryLineItemsBL;
-        public StoreFrontMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
+        private ICustomerCartBL _customerCartBL;
+        private ICustomerOrderLineItemBL _customerOrderLineItem;
+        private ICustomerOrderHistoryBL _customerOrderHistory;
+        public StoreFrontMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL, 
+                            ICustomerCartBL customerCartBL, ICustomerOrderLineItemBL customerOrderLineItem, ICustomerOrderHistoryBL customerOrderHistory) {
             _managerBL = managerBL;
             _customerBL = customerBL;
             _locationBL = locationBL;
             _productBL = productBL;
             _inventoryLineItemsBL = inventoryLineItemsBL;
+            _customerCartBL = customerCartBL;
+            _customerOrderLineItem = customerOrderLineItem;
+            _customerOrderHistory = customerOrderHistory;
             _menu = "\nWelcome to my Store App! \nAre you a customer or manager?" +
                     "\n[0] Customer" +
                     "\n[1] Manager" +
@@ -41,7 +48,7 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        menu = new CustomerLoginMenu(_customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
+                        menu = new CustomerLoginMenu(_customerBL, _locationBL, _productBL, _inventoryLineItemsBL, _customerCartBL, _customerOrderLineItem, _customerOrderHistory);
                         menu.Start();
                         break;
                     case "1":

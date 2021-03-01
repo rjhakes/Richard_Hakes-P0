@@ -18,11 +18,18 @@ namespace StoreUI
         private ILocationBL _locationBL;
         private IProductBL _productBL;
         private IInventoryLineItemBL _inventoryLineItemsBL;
-        public CustomerLoginMenu(ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL) {
+        private ICustomerCartBL _customerCartBL;
+        private ICustomerOrderLineItemBL _customerOrderLineItem;
+        private ICustomerOrderHistoryBL _customerOrderHistory;
+        public CustomerLoginMenu(ICustomerBL customerBL, ILocationBL locationBL, IProductBL productBL, IInventoryLineItemBL inventoryLineItemsBL, 
+                                ICustomerCartBL customerCartBL, ICustomerOrderLineItemBL customerOrderLineItem, ICustomerOrderHistoryBL customerOrderHistory) {
             _customerBL = customerBL;
             _locationBL = locationBL;
             _productBL = productBL;
             _inventoryLineItemsBL = inventoryLineItemsBL;
+            _customerCartBL = customerCartBL;
+            _customerOrderLineItem = customerOrderLineItem;
+            _customerOrderHistory = customerOrderHistory;
             _menu = "\n" +
                     "\n[0] Sign In" +
                     "\n[1] Register as Customer" +
@@ -47,7 +54,7 @@ namespace StoreUI
                         {
                             if (Login())
                             {
-                                menu = new CustomerMenu(_customer, _customerBL, _locationBL, _productBL, _inventoryLineItemsBL);
+                                menu = new CustomerMenu(_customer, _customerBL, _locationBL, _productBL, _inventoryLineItemsBL, _customerCartBL, _customerOrderLineItem, _customerOrderHistory);
                                 menu.Start();
                             }
                             else { _customer = null; }
