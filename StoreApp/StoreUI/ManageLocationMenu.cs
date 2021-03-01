@@ -7,15 +7,19 @@ namespace StoreUI
     class ManageLocationMenu : AMenu, IMenu
     {
         private readonly string _menu;
-        private IProductBL _productBL = new ProductBL(new ProductRepoFile());
+        //private IProductBL _productBL = new ProductBL(new ProductRepoFile());
         private ILocationBL _locationBL;
-        private Location _storeLocation;
+        private Location _location;
+        private Manager _user;
+        private IManagerBL _managerBL;
         public override string MenuPrint {
             get { return _menu; }
         }
-        public ManageLocationMenu(ILocationBL locationBL, Location storeLocation) {
+        public ManageLocationMenu(Manager user, IManagerBL managerBL, Location location, ILocationBL locationBL) {
             _locationBL = locationBL;
-            _storeLocation = storeLocation;
+            _location = location;
+            _user = user;
+            _managerBL = managerBL;
             _menu = "\n" +
                     "\n[0] Add All Products to Inventory" +
                     "\n[1] Add a Product to Inventory" +
@@ -32,14 +36,14 @@ namespace StoreUI
             Boolean stay = true;
             do {
                 Console.Clear();
-                Console.WriteLine($"Managing at {_storeLocation.LocationName} Store");
-                GetInventory();
+                Console.WriteLine($"Managing at {_location.LocName} Store");
+                //GetInventory();
                 Console.WriteLine(MenuPrint);
                 Console.WriteLine("Enter a number: ");
                 string userInput = Console.ReadLine();
                 switch(userInput) {
                     case "0":
-                        AddAllProductToInventory();
+                        //AddAllProductToInventory();
                         break;
                     case "1":
                         
@@ -66,24 +70,24 @@ namespace StoreUI
             } while (stay);
         }
 
-        public void GetInventory() {
+        /*public void GetInventory() {
             int i = 0;
-            foreach (var item in _storeLocation.Inventory)
+            foreach (var item in _location.Inventory)
             {
                 Console.WriteLine($"[{i}] {item.ToString()}");
                 i++;
             }
-        }
+        }*/
 
-        public void AddAllProductToInventory() {
+        /*public void AddAllProductToInventory() {
             Item newItem;
             foreach (var item in _productBL.GetProducts()) {
                 newItem = new Item();
                 newItem.Product = item;
                 newItem.Quantity = 20;
-                _storeLocation.Inventory.Add(newItem);
+                _location.Inventory.Add(newItem);
                 
             }
-        }
+        }*/
     }
 }

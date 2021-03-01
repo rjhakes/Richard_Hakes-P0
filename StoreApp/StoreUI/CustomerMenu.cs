@@ -98,9 +98,10 @@ namespace StoreUI
         }
 
         public void GetLocations() {
-            /*foreach (var item in _locationBL.GetLocations()) {
+            Console.Clear();
+            foreach (var item in _locationBL.GetLocations()) {
                 Console.WriteLine(item.ToString());
-            }*/
+            }
             // Console.WriteLine("Press any key to continue");
             // Console.ReadLine();
         }

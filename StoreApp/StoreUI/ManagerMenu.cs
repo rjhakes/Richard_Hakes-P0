@@ -20,6 +20,7 @@ namespace StoreUI
         private IManagerBL _managerBL;
         private ICustomerBL _customerBL;
         private ILocationBL _locationBL;
+        private Location _location;
         public ManagerMenu(Manager manager, IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
             _user = manager;
             _managerBL = managerBL;
@@ -107,9 +108,9 @@ namespace StoreUI
                         GetLocations();
                         Console.Write("Choose Location Name:\t");
                         string userLocation = Console.ReadLine();
-                        //_location = ChooseLocation(userLocation);
-                        //menu = new ManageLocationMenu(_locationBL, _location);
-                        //menu.Start();
+                        _location = _locationBL.GetLocationByName(userLocation);
+                        menu = new ManageLocationMenu(_user, _managerBL, _location, _locationBL);
+                        menu.Start();
                         break;
                     case "Back":
                         stay = false;

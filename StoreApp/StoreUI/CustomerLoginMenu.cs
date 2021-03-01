@@ -1,5 +1,5 @@
 using System;
-using System.Security.Cryptography;
+//using System.Security.Cryptography;
 using System.Security;
 using System.Collections.Generic;
 using StoreBL;
@@ -16,8 +16,10 @@ namespace StoreUI
 
         private ICustomerBL _customerBL;
         private Customer _customer;
-        public CustomerLoginMenu(ICustomerBL customerBL) {
+        private ILocationBL _locationBL;
+        public CustomerLoginMenu(ICustomerBL customerBL, ILocationBL locationBL) {
             _customerBL = customerBL;
+            _locationBL = locationBL;
             _menu = "\n" +
                     "\n[0] Sign In" +
                     "\n[1] Register as Customer" +
@@ -40,7 +42,12 @@ namespace StoreUI
                     case "0":
                         try
                         {
-                            Login();
+                            if (Login())
+                            {
+                                menu = new CustomerMenu(_customer, _customerBL, _locationBL);
+                                menu.Start();
+                            }
+                            else { _customer = null; }
                         }
                         catch (ArgumentNullException e)
                         {
@@ -48,7 +55,10 @@ namespace StoreUI
                             Console.ReadLine();
                             continue;
                         }
-                        
+                        finally
+                        {
+                            _customer = null;
+                        }
                         break;
                     case "1":
                         try
@@ -89,12 +99,12 @@ namespace StoreUI
         {
             _customerBL.AddCustomer(GetCustomerDetails());
             Console.WriteLine("Customer Successfully Created!");
-            
-
         }
 
         public void GetCustomers() 
         {
+            Console.Clear();
+            Console.WriteLine("Customer List---");
             foreach (var item in _customerBL.GetCustomers())
             {
                 Console.WriteLine(item.ToString());
@@ -106,7 +116,7 @@ namespace StoreUI
         public void DeleteCustomer() 
         {
             Console.Write("Enter the customer that you wish to be removed from the roster:\t");
-            Customer customer2BDeleted = _customerBL.GetCustomerByName(Console.ReadLine());
+            Customer customer2BDeleted = _customerBL.GetCustomerByEmail(Console.ReadLine());
             if (customer2BDeleted == null)
             {
                 Console.WriteLine("We can't find the customer. They may have already been deleted. \n Or you typed their name wrong. This is a case sensitive application.");
@@ -118,40 +128,17 @@ namespace StoreUI
             }
         }
 
-        public void Login() {
-            //http://csharptest.net/470/another-example-of-how-to-store-a-salted-password-hash/
-            //https://stackoverflow.com/questions/4181198/how-to-hash-a-password/10402129#10402129
+        public bool Login() {
             Console.Clear();
             Console.WriteLine("Sign in---");
-            Console.Write("User Email:\t\t");
+            Console.Write("Email:\t\t");
             string userEmail = Console.ReadLine();
-            Console.Write("Password:\t\t");
+            Console.Write("Password:\t");
             string password = GetPassword();
-
-            //Verify the user-entered password against a stored password
-            /* Fetch the stored value */
-            //string savedPasswordHash = DBContext.GetUser(u => u.UserName == user).Password;
-            /* Extract the bytes */
-            //byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
-            byte[] hashBytes = Convert.FromBase64String(GetUserPasswordHash(userEmail));
-            /* Get the salt */
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-            /* Compute the hash on the password the user entered */
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
-            byte[] hash = pbkdf2.GetBytes(20);
-            /* Compare the results */
-            for (int i=0; i < 20; i++) {
-                if (hashBytes[i+16] != hash[i]) { 
-                    Console.WriteLine("Incorrect User Name or Password \nPress Enter");
-                    Console.ReadLine();
-                }
-                else {
-                    IMenu menu = new CustomerMenu(_customer, _customerBL);
-                    menu.Start(); 
-                    i = 20;
-                }
-            }
+            byte[] hashBytes = Convert.FromBase64String(_customerBL.GetCustomerByEmail(userEmail).CustomerPasswordHash);
+            PasswordHash customerPasswordHash = new PasswordHash(hashBytes);
+            _customer = _customerBL.GetCustomerByEmail(userEmail);
+            return customerPasswordHash.Verify(password);
         }
 
         public string GetUserPasswordHash(string _userName) {
@@ -197,11 +184,13 @@ namespace StoreUI
         private Customer GetCustomerDetails()
         {
             Customer newCustomer = new Customer();
-            Console.Write("Enter Customer Name:\n\t");
+            Console.Clear();
+            Console.WriteLine("Register Customer---");
+            Console.Write("Customer Name:\n\t");
             newCustomer.CustomerName = Console.ReadLine();
-            Console.Write("Enter Customer Email:\n\t");
+            Console.Write("Email (example.domain.com):\n\t");
             newCustomer.CustomerEmail = Console.ReadLine();
-            Console.Write("Enter Password:\n\t");
+            Console.Write("Password:\n\t");
             string tempPass = GetPassword();
             Console.WriteLine("");
             string confirmPass = null;
@@ -210,27 +199,12 @@ namespace StoreUI
                 confirmPass =  GetPassword();
                 Console.WriteLine("");
             } while (tempPass != confirmPass);
-            //https://stackoverflow.com/questions/4181198/how-to-hash-a-password/10402129#10402129
-            //Create the salt value with a cryptographic PRNG:
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-
-            //Create the Rfc2898DeriveBytes and get the hash value:
-            var pbkdf2 = new Rfc2898DeriveBytes(tempPass, salt, 100000);
-            byte[] hash = pbkdf2.GetBytes(20);
-
-            //Combine the salt and password bytes for later use:
-            byte[] hashBytes = new byte[36];
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 20);
-
-            //Turn the combined salt+hash into a string for storage
-            newCustomer.CustomerPasswordHash = Convert.ToBase64String(hashBytes);
-            //_context.AddUser(new User { User = newCustomer.CustomerEmail, Password = newCustomerPasswordHash });
-            Console.Write("Enter Customer Phone:\n\t");
+            PasswordHash passwordHash = new PasswordHash(tempPass);
+            newCustomer.CustomerPasswordHash = Convert.ToBase64String(passwordHash.ToArray());
+            Console.Write("Phone # (1234567890):\n\t");
             newCustomer.CustomerPhone = Console.ReadLine();
             string newAddress = "";
-            Console.WriteLine("Enter Customer Address--");
+            Console.WriteLine("Customer Address--");
             Console.Write("\t\tStreet:\t");
             newAddress += Console.ReadLine();
             Console.Write("\t\tCity:\t");

@@ -1,5 +1,5 @@
 using System;
-using System.Security.Cryptography;
+//using System.Security.Cryptography;
 using StoreModels;
 using StoreBL;
 using StoreDL;
@@ -14,9 +14,14 @@ namespace StoreUI
         }
 
         private IManagerBL _managerBL;
+        private ICustomerBL _customerBL;
+        private ILocationBL _locationBL;
         private Manager _manager;
-        public ManagerLoginMenu(IManagerBL managerBL) {
+
+        public ManagerLoginMenu(IManagerBL managerBL, ICustomerBL customerBL, ILocationBL locationBL) {
             _managerBL = managerBL;
+            _customerBL = customerBL;
+            _locationBL = locationBL;
             _menu = "\n" +
                     "\n[0] Sign In" +
                     "\n[1] Register as Manager" +
@@ -36,10 +41,39 @@ namespace StoreUI
                 IMenu menu;
                 switch (userInput) {
                     case "0":
-                        Login();
+                        try
+                        {
+                            //Login();
+                            if (Login())
+                            {
+                                menu = new ManagerMenu(_manager, _managerBL, _customerBL, _locationBL);
+                                menu.Start();
+                            }
+                            else { _manager = null; }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("\nThe provided email is not associated with a manager!");
+                            Console.ReadLine();
+                            continue;
+                        }
+                        finally
+                        {
+                            _manager = null;
+                        }
                         break;
                     case "1":
-                        CreateManager();
+                        try
+                        {
+                            CreateManager();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("\ninvalid input. ");
+                            Console.ReadLine();
+                            continue;
+                        }
+                        
                         break;
                     case "2":
                         Console.Clear();
@@ -90,53 +124,14 @@ namespace StoreUI
         }
 
         public void CreateManager() {
-            Manager newManager = new Manager();
-            Console.Clear();
-            Console.WriteLine("Register Manager---");
-            Console.Write("Manager Name:\n\t");
-            newManager.ManagerName = Console.ReadLine();
-            Console.Write("Email (example@domain.com):\n\t");
-            newManager.ManagerEmail = Console.ReadLine();
-            // Console.Write("User Name:\n\t");
-            // newManager.UserName = Console.ReadLine();
-            Console.Write("Password:\n\t");
-            //newManager.CustName = Console.ReadLine();
-            string tempPass = Console.ReadLine();
-            string confirmPass = null;
-            do {
-                Console.Write("Confirm Password (must match above):\n\t");
-                confirmPass = Console.ReadLine();
-            } while (tempPass != confirmPass);
-            
-            //https://stackoverflow.com/questions/4181198/how-to-hash-a-password/10402129#10402129
-            //Create the salt value with a cryptographic PRNG:
-            byte[] salt;
-            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
-
-            //Create the Rfc2898DeriveBytes and get the hash value:
-            var pbkdf2 = new Rfc2898DeriveBytes(tempPass, salt, 100000);
-            byte[] hash = pbkdf2.GetBytes(20);
-
-            //Combine the salt and password bytes for later use:
-            byte[] hashBytes = new byte[36];
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 20);
-
-            //Turn the combined salt+hash into a string for storage
-            newManager.SavedPasswordHash = Convert.ToBase64String(hashBytes);
-            //DBContext.AddUser(new User { ..., Password = savedPasswordHash });
-            //newManager.CustName = Console.ReadLine();
-            
-            Console.Write("Phone # (1234567890):\n\t");
-            newManager.ManagerPhoneNumber = Console.ReadLine();
-            Console.Write("Store Location:\n\t");
-            //newManager.ManagerLocation = Console.ReadLine();
-            _managerBL.AddManager(newManager);
+            _managerBL.AddManager(GetManagerDetails());
             Console.WriteLine("Manager Successfully Created!");
+            
         }
 
         public void GetManagers() {
-
+            Console.Clear();
+            Console.WriteLine("Manager List---");
             foreach (var item in _managerBL.GetManagers())
             {
                 Console.WriteLine(item.ToString());
@@ -145,48 +140,25 @@ namespace StoreUI
             Console.ReadLine();
         }
 
-        public void Login() {
-            //http://csharptest.net/470/another-example-of-how-to-store-a-salted-password-hash/
-            //https://stackoverflow.com/questions/4181198/how-to-hash-a-password/10402129#10402129
+        public bool Login() {
             Console.Clear();
             Console.WriteLine("Sign in---");
             Console.Write("Email:\t\t");
-            string userName = Console.ReadLine();
+            string userEmail = Console.ReadLine();
             Console.Write("Password:\t");
             string password = GetPassword();
-
-            //Verify the user-entered password against a stored password
-            /* Fetch the stored value */
-            //string savedPasswordHash = DBContext.GetUser(u => u.UserName == user).Password;
-            /* Extract the bytes */
-            //byte[] hashBytes = Convert.FromBase64String(savedPasswordHash);
-            byte[] hashBytes = Convert.FromBase64String(GetManagerSavedPasswordHash(userName));
-            /* Get the salt */
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-            /* Compute the hash on the password the user entered */
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000);
-            byte[] hash = pbkdf2.GetBytes(20);
-            /* Compare the results */
-            for (int i=0; i < 20; i++) {
-                if (hashBytes[i+16] != hash[i]) { 
-                    Console.WriteLine("Incorrect Email or Password \nPress Enter");
-                    Console.ReadLine();
-                 }
-                else { 
-                    IMenu menu = new ManagerMenu(_manager);
-                    menu.Start();
-                    i = 20;
-                }
-            }
+            byte[] hashBytes = Convert.FromBase64String(_managerBL.GetManagerByEmail(userEmail).ManagerPasswordHash);
+            PasswordHash managerPasswordHash = new PasswordHash(hashBytes);
+            _manager = _managerBL.GetManagerByEmail(userEmail);
+            return managerPasswordHash.Verify(password);
         }
 
-        public string GetManagerSavedPasswordHash(string _userName) {
+        public string GetManagerPasswordHash(string _userName) {
             foreach (var item in _managerBL.GetManagers())
             {
                 if (item.ManagerEmail == _userName) {
                     _manager = item;
-                    return item.SavedPasswordHash;
+                    return item.ManagerPasswordHash;
                 }
             }
             return null;
@@ -219,6 +191,35 @@ namespace StoreUI
                 }
             }
             return pwd;
+        }
+
+        private Manager GetManagerDetails()
+        {
+            Manager newManager = new Manager();
+            Console.Clear();
+            Console.WriteLine("Register Manager---");
+            Console.Write("Manager Name:\n\t");
+            newManager.ManagerName = Console.ReadLine();
+            Console.Write("Email (example@domain.com):\n\t");
+            newManager.ManagerEmail = Console.ReadLine();
+            Console.Write("Password:\n\t");
+            string tempPass = GetPassword();
+            Console.WriteLine("");
+            string confirmPass = null;
+            do {
+                Console.Write("Confirm Password (must match above):\n\t");
+                confirmPass = GetPassword();
+                Console.WriteLine("");
+            } while (tempPass != confirmPass);
+            
+            PasswordHash passwordHash = new PasswordHash(tempPass);
+            newManager.ManagerPasswordHash = Convert.ToBase64String(passwordHash.ToArray());
+            Console.Write("Phone # (1234567890):\n\t");
+            newManager.ManagerPhone = Console.ReadLine();
+            Console.Write("Store ID:\n\t");
+            newManager.ManagerLocId = int.Parse(Console.ReadLine());
+            return newManager;
+            
         }
     }
 }
