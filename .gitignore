@@ -1,4 +1,5 @@
 appsettings.json
+PasswordHash.cs
 # Created by https://www.toptal.com/developers/gitignore/api/vscode,dotnetcore,csharp
 # Edit at https://www.toptal.com/developers/gitignore?templates=vscode,dotnetcore,csharp
 
