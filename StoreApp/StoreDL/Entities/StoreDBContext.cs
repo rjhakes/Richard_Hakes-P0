@@ -30,8 +30,6 @@ namespace StoreDL.Entities
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<StoreOrderHistory> StoreOrderHistories { get; set; }
         public virtual DbSet<StoreOrderLineItem> StoreOrderLineItems { get; set; }
-        public virtual DbSet<VCustomerOrderHistory> VCustomerOrderHistories { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -104,19 +102,19 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Cust)
                     .WithMany(p => p.CustomerCarts)
                     .HasForeignKey(d => d.CustId)
-                    .HasConstraintName("FK__customerC__custI__49AEE81E");
+                    .HasConstraintName("FK__customerC__custI__0A888742");
 
                 entity.HasOne(d => d.Loc)
                     .WithMany(p => p.CustomerCarts)
                     .HasForeignKey(d => d.LocId)
-                    .HasConstraintName("FK__customerC__locID__4AA30C57");
+                    .HasConstraintName("FK__customerC__locID__0B7CAB7B");
             });
 
             modelBuilder.Entity<CustomerOrderHistory>(entity =>
             {
                 entity.ToTable("customerOrderHistory");
 
-                entity.HasIndex(e => e.OrderId, "UQ__customer__0809337CA2636CFF")
+                entity.HasIndex(e => e.OrderId, "UQ__customer__0809337C3124B925")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -136,12 +134,12 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Cust)
                     .WithMany(p => p.CustomerOrderHistories)
                     .HasForeignKey(d => d.CustId)
-                    .HasConstraintName("FK__customerO__custI__46D27B73");
+                    .HasConstraintName("FK__customerO__custI__07AC1A97");
 
                 entity.HasOne(d => d.Loc)
                     .WithMany(p => p.CustomerOrderHistories)
                     .HasForeignKey(d => d.LocId)
-                    .HasConstraintName("FK__customerO__locID__45DE573A");
+                    .HasConstraintName("FK__customerO__locID__06B7F65E");
             });
 
             modelBuilder.Entity<CustomerOrderLineItem>(entity =>
@@ -161,14 +159,14 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Prod)
                     .WithMany(p => p.CustomerOrderLineItems)
                     .HasForeignKey(d => d.ProdId)
-                    .HasConstraintName("FK__customerO__prodI__33BFA6FF");
+                    .HasConstraintName("FK__customerO__prodI__74994623");
             });
 
             modelBuilder.Entity<Inventory>(entity =>
             {
                 entity.ToTable("inventory");
 
-                entity.HasIndex(e => e.LocId, "UQ__inventor__793196EA05284A64")
+                entity.HasIndex(e => e.LocId, "UQ__inventor__793196EAD6F574E2")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -178,7 +176,7 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Loc)
                     .WithOne(p => p.Inventory)
                     .HasForeignKey<Inventory>(d => d.LocId)
-                    .HasConstraintName("FK__inventory__locID__3A6CA48E");
+                    .HasConstraintName("FK__inventory__locID__7B4643B2");
             });
 
             modelBuilder.Entity<InventoryLineItem>(entity =>
@@ -197,25 +195,25 @@ namespace StoreDL.Entities
                     .WithMany(p => p.InventoryLineItems)
                     .HasForeignKey(d => d.InventoryId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK__inventory__inven__3D491139");
+                    .HasConstraintName("FK__inventory__inven__7E22B05D");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.InventoryLineItems)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__inventory__produ__3E3D3572");
+                    .HasConstraintName("FK__inventory__produ__7F16D496");
             });
 
             modelBuilder.Entity<Location>(entity =>
             {
                 entity.ToTable("locations");
 
-                entity.HasIndex(e => e.LocPhone, "UQ__location__1EB9029ECBE661B5")
+                entity.HasIndex(e => e.LocPhone, "UQ__location__1EB9029E2004F726")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LocName, "UQ__location__2B95D144A1A95024")
+                entity.HasIndex(e => e.LocName, "UQ__location__2B95D144522CFBE9")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LocAddress, "UQ__location__C08AF8309693F93B")
+                entity.HasIndex(e => e.LocAddress, "UQ__location__C08AF830EC5D95FC")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -243,7 +241,7 @@ namespace StoreDL.Entities
             {
                 entity.ToTable("managers");
 
-                entity.HasIndex(e => e.ManagerEmail, "UQ__managers__CFFCD91663D5D998")
+                entity.HasIndex(e => e.ManagerEmail, "UQ__managers__CFFCD9161CB47E42")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -277,17 +275,17 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.ManagerLoc)
                     .WithMany(p => p.Managers)
                     .HasForeignKey(d => d.ManagerLocId)
-                    .HasConstraintName("FK__managers__manage__420DC656");
+                    .HasConstraintName("FK__managers__manage__02E7657A");
             });
 
             modelBuilder.Entity<ManagersCart>(entity =>
             {
                 entity.ToTable("managersCarts");
 
-                entity.HasIndex(e => e.ManagerId, "UQ__managers__47E0147ED5A9C13D")
+                entity.HasIndex(e => e.ManagerId, "UQ__managers__47E0147EB90E70EB")
                     .IsUnique();
 
-                entity.HasIndex(e => e.LocId, "UQ__managers__793196EA00058414")
+                entity.HasIndex(e => e.LocId, "UQ__managers__793196EA4B9D6C0A")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -302,13 +300,13 @@ namespace StoreDL.Entities
                     .WithOne(p => p.ManagersCart)
                     .HasForeignKey<ManagersCart>(d => d.LocId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__managersC__locID__505BE5AD");
+                    .HasConstraintName("FK__managersC__locID__113584D1");
 
                 entity.HasOne(d => d.Manager)
                     .WithOne(p => p.ManagersCart)
                     .HasForeignKey<ManagersCart>(d => d.ManagerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__managersC__manag__4F67C174");
+                    .HasConstraintName("FK__managersC__manag__10416098");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -360,12 +358,12 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Loc)
                     .WithMany(p => p.StoreOrderHistories)
                     .HasForeignKey(d => d.LocId)
-                    .HasConstraintName("FK__storeOrde__locID__53385258");
+                    .HasConstraintName("FK__storeOrde__locID__1411F17C");
 
                 entity.HasOne(d => d.Manager)
                     .WithMany(p => p.StoreOrderHistories)
                     .HasForeignKey(d => d.ManagerId)
-                    .HasConstraintName("FK__storeOrde__manag__542C7691");
+                    .HasConstraintName("FK__storeOrde__manag__150615B5");
             });
 
             modelBuilder.Entity<StoreOrderLineItem>(entity =>
@@ -385,42 +383,7 @@ namespace StoreDL.Entities
                 entity.HasOne(d => d.Prod)
                     .WithMany(p => p.StoreOrderLineItems)
                     .HasForeignKey(d => d.ProdId)
-                    .HasConstraintName("FK__storeOrde__prodI__369C13AA");
-            });
-
-            modelBuilder.Entity<VCustomerOrderHistory>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("v_CustomerOrderHistory");
-
-                entity.Property(e => e.CustomerEmail)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("customerEmail");
-
-                entity.Property(e => e.LocName)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("locName");
-
-                entity.Property(e => e.OrderDate)
-                    .HasColumnType("date")
-                    .HasColumnName("orderDate");
-
-                entity.Property(e => e.OrderId).HasColumnName("orderID");
-
-                entity.Property(e => e.ProdName)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasColumnName("prodName");
-
-                entity.Property(e => e.ProdPrice).HasColumnName("prodPrice");
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
+                    .HasConstraintName("FK__storeOrde__prodI__7775B2CE");
             });
 
             OnModelCreatingPartial(modelBuilder);
