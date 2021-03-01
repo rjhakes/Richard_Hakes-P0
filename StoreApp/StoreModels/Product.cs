@@ -8,7 +8,7 @@ namespace StoreModels
         private Category categoryType;
         private string brandName;
 
-        public string ProductName { 
+        public string ProdName { 
             get {return productName;}
             set {
                 if (value == null) {
@@ -17,7 +17,7 @@ namespace StoreModels
                 productName = value;
             }
         }
-        public double ProductPrice { 
+        public double ProdPrice { 
             get {return productPrice;}
             set {
                 if (value == null) {
@@ -26,7 +26,7 @@ namespace StoreModels
                 productPrice = value;
             }
             }
-        public Category CategoryType { 
+        public Category ProdCategory { 
             get {return categoryType;}
             set {
                 if (value == null) {
@@ -35,7 +35,7 @@ namespace StoreModels
                 categoryType = value;
             }
         }
-        public string BrandName { 
+        public string ProdBrandName { 
             get {return brandName;}
             set {
                 if (value == null) {
@@ -45,7 +45,9 @@ namespace StoreModels
             }
         }
 
-        public override string ToString() => $"Product Details: \n\t Product Name: \t\t{this.ProductName} \n\t Price: \t\t{this.ProductPrice} \n\t Category: \t\t{this.CategoryType} \n\t Brand Name: \t\t{this.BrandName}";
+        public int? Id { get; set; }
+
+        public override string ToString() => $"\n\tProduct Name:\t\t{this.ProdName}\n\tPrice:\t\t\t{this.ProdPrice}\n\tCategory:\t\t{this.ProdCategory}\n\tBrand Name:\t\t{this.ProdBrandName}\n";
         //todo: add more properties to define a product (maybe a category?)
     }
 }

@@ -10,8 +10,6 @@ namespace StoreModels
         private string locAddress;
         private string locName;
         private string locPhone;
-        // private List<Item> inventory;
-        // private List<Order> orderHistory;
 
         public int? Id { get; set; }
 
@@ -42,24 +40,7 @@ namespace StoreModels
                 locPhone = value;
             }
         }
-        /*public List<Item> Inventory { 
-            get {return inventory;}
-            set {
-                if (value == null) {
-                    //todo throw exception 
-                }
-                inventory = value;
-            }
-        }
-        public List<Order> OrderHistory { 
-            get {return orderHistory;}
-            set {
-                if (value == null) {
-                    //todo throw exception
-                }
-                orderHistory = OrderHistory;
-            }
-        }*/
+        public Inventory Inventory { get; set; }
 
         //TODO: add some property for the location inventory
 
