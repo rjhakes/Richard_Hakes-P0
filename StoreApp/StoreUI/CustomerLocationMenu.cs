@@ -57,21 +57,21 @@ namespace StoreUI
 
                 string userInput = Console.ReadLine();
                 if (userInput != "View" && userInput != "Back" && userInput != "Exit") {
-                    OrderItem(userInput);
+                    AddItemToCart(userInput);
                 } else {
                     switch(userInput) {
                         case "View":
                             //TODO move to CustomerCartMenu
-                            //ViewCart();
-                            /*if (_user.CustCart.Count > 0) {
+                            ViewCart();
+                            if (_customerOrderLineItem.ProdId != null) {
                                 Console.WriteLine("Would you like to finalize your purchase? (y/n)"); 
                                 if (Console.ReadLine().Equals("y")) {
-                                    CompletePurchase();
+                                    //CompletePurchase();
                                     Console.WriteLine("\nPurchase Complete!\nPress Enter to return to menu");
                                     Console.ReadLine();
                                 }
-                            }*/
-                            
+                            }
+                            Console.ReadLine();
                             break;
                         case "Back":
                             stay = false;
@@ -101,20 +101,69 @@ namespace StoreUI
                 
             }
         }
-
-        public void OrderItem(string _item) {
-            //move inventory quantity change to new method
-            int i = int.Parse(_item);
-            Product item = _productBL.GetProductById(i);
-
-            
-        }
-        /*public void ViewCart() {
-            /*foreach (var item in _user.CustCart) {
-                Console.WriteLine(item);
+        public void ViewCart() {
+            foreach (var item in _customerOrderLineItemBL.GetCustomerOrderLineItems()) 
+            {
+                if (item.OrderId == _customerCart.CurrentItemsId)
+                {
+                    Console.WriteLine($"{_productBL.GetProductById((int)item.ProdId)}\tQuantity:\t\t{item.Quantity}");
+                }
+                
             }
             Console.ReadLine();
-        }*/
+        }
+
+        public void AddItemToCart(string _item) {
+            //move inventory quantity change to new method
+            int prodId = int.Parse(_item);
+            Console.WriteLine($"Ordering {_productBL.GetProductById(prodId).ProdName}");
+            Console.Write($"Enter Quantity to add to cart: ");
+            int quantity = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+            bool exists = false;
+            CustomerOrderLineItem orderItem2BUpdated = new CustomerOrderLineItem();
+
+            foreach (var item in _customerOrderLineItemBL.GetCustomerOrderLineItems())
+            {
+                if (item.OrderId == _customerCart.CurrentItemsId && item.ProdId == prodId)
+                {
+                    exists = true;
+                    orderItem2BUpdated = item;
+                } 
+            }
+            try
+            {
+                if (_customerOrderLineItem.ProdId != null && exists)
+                {
+                    orderItem2BUpdated.Quantity += quantity;
+                    _customerOrderLineItemBL.UpdateCustomerOrderLineItem(_customerOrderLineItemBL.GetCustomerOrderLineItemById((int)orderItem2BUpdated.Id), orderItem2BUpdated);
+                }
+                else if (_customerOrderLineItem.ProdId != null && !exists)
+                {
+                    _customerOrderLineItemBL.AddCustomerOrderLineItem(GetCustomerOrderLineItemDetails((int)_customerOrderLineItem.OrderId, (int)prodId, (int)quantity));
+                }
+                else if (_customerOrderLineItem.ProdId == null)
+                {
+                    _customerOrderLineItem.ProdId = prodId;
+                    _customerOrderLineItem.Quantity = quantity;
+                    _customerOrderLineItem.ProdPrice = _productBL.GetProductById(prodId).ProdPrice;
+                    _customerOrderLineItemBL.UpdateCustomerOrderLineItem(_customerOrderLineItemBL.GetCustomerOrderLineItemById((int)_customerOrderLineItem.Id), _customerOrderLineItem);
+                }
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }            
+        }
+
+        public void UpdateOrderItem(CustomerOrderLineItem orderItem2BUpdated)
+        {
+            /*CustomerOrderLineItem updatedOrderItem = orderItem2BUpdated;
+            updatedOrderItem.Quantity += quantity;
+            _customerOrderLineItemBL.UpdateCustomerOrderLineItem(orderItem2BUpdated, updatedOrderItem);*/
+        }
+        
 
         /*public void CompletePurchase() {
             LineItems();
@@ -156,9 +205,8 @@ namespace StoreUI
         {
             try
             {
-                CustomerCart customerCart = _customerCartBL.GetCustomerCartByIds((int)_user.Id, (int)_location.Id);
-                Console.WriteLine(customerCart.ToString());
-                Console.ReadLine();
+                _customerCart = _customerCartBL.GetCustomerCartByIds((int)_user.Id, (int)_location.Id);
+                _customerOrderLineItem = _customerOrderLineItemBL.GetCustomerOrderLineItemById((int)_customerCart.CurrentItemsId);
             }
             catch (Exception)
             {
@@ -187,11 +235,20 @@ namespace StoreUI
         public CustomerOrderLineItem GetCustomerOrderLineItemDetails()
         {
             CustomerOrderLineItem newLineItem = new CustomerOrderLineItem();
-            //newLineItem.Id = _customerOrderLineItemBL.Ident_Curr() + 1;
             newLineItem.OrderId = _customerOrderLineItemBL.Ident_Curr() + 1; //newLineItem.Id;
             newLineItem.ProdId = null;
             newLineItem.Quantity = 0;
             newLineItem.ProdPrice = 0;
+            _customerOrderLineItem = newLineItem;
+            return newLineItem;
+        }
+        public CustomerOrderLineItem GetCustomerOrderLineItemDetails(int orderId, int prodId, int quantity)
+        {
+            CustomerOrderLineItem newLineItem = new CustomerOrderLineItem();
+            newLineItem.OrderId = orderId; //newLineItem.Id;
+            newLineItem.ProdId = prodId;
+            newLineItem.Quantity = quantity;
+            newLineItem.ProdPrice = _productBL.GetProductById(prodId).ProdPrice;
             _customerOrderLineItem = newLineItem;
             return newLineItem;
         }
