@@ -63,7 +63,14 @@ namespace StoreUI
                         case "View":
                             //TODO move to CustomerCartMenu
                             ViewCart();
-                            if (_customerOrderLineItem.ProdId != null) {
+                            if (_customerOrderLineItem.ProdId != null) 
+                            {
+                                Console.WriteLine("Would you like to delete an item from cart? (y/n)");
+                                if (Console.ReadLine().Equals("y"))
+                                {
+                                    DeleteCartItem();
+                                    ViewCart();
+                                }
                                 Console.WriteLine("Would you like to finalize your purchase? (y/n)"); 
                                 if (Console.ReadLine().Equals("y")) {
                                     CreateCustomerOrderHistory();
@@ -110,7 +117,7 @@ namespace StoreUI
                 {
                     try
                     {
-                        Console.WriteLine($"{_productBL.GetProductById((int)item.ProdId)}\tQuantity:\t\t{item.Quantity}");
+                        Console.WriteLine($"{_productBL.GetProductById((int)item.ProdId)}\tQuantity:\t\t{item.Quantity}\n\tProduct ID:\t\t{item.ProdId}");
                     }
                     catch (System.Exception)
                     {
@@ -200,7 +207,15 @@ namespace StoreUI
             try
             {
                 _customerCart = _customerCartBL.GetCustomerCartByIds((int)_user.Id, (int)_location.Id);
-                _customerOrderLineItem = _customerOrderLineItemBL.GetCustomerOrderLineItemById((int)_customerCart.CurrentItemsId);
+                //_customerOrderLineItem = _customerOrderLineItemBL.GetCustomerOrderLineItemById((int)_customerCart.CurrentItemsId);
+                foreach (var item in _customerOrderLineItemBL.GetCustomerOrderLineItems())
+                {
+                    if (item.OrderId == _customerCart.CurrentItemsId)
+                    {
+                        _customerOrderLineItem = item;
+                        break;
+                    }
+                }
             }
             catch (Exception)
             {
@@ -262,6 +277,13 @@ namespace StoreUI
             newCart.CurrentItemsId = (int)_customerOrderLineItem.OrderId;
             _customerCartBL.UpdateCustomerCart(_customerCart, newCart);
             _customerCart = _customerCartBL.GetCustomerCartByIds((int)_user.Id, (int)_location.Id);
+        }
+
+        public void DeleteCartItem()
+        {
+            Console.WriteLine("Enter Product ID you wish to delete from cart: ");
+            int prodId = int.Parse(Console.ReadLine());
+            _customerOrderLineItemBL.DeleteCustomerOrderLineItem(_customerOrderLineItemBL.GetCustomerOrderLineItemById(_customerCart.CurrentItemsId, prodId));
         }
     }
 }
