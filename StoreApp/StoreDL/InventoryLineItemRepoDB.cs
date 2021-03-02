@@ -29,13 +29,13 @@ namespace StoreDL
             return inventoryLineItem2BDeleted;
         }
 
-        public InventoryLineItem GetInventoryLineItemById(int id)
+        public InventoryLineItem GetInventoryLineItemById(int invId, int prodId)
         {
             return _context.InventoryLineItems
             .AsNoTracking()
             .Select(x => _mapper.ParseInventoryLineItem(x))
             .ToList()
-            .FirstOrDefault(x => x.InventoryId == id);
+            .FirstOrDefault(x => x.InventoryId == invId && x.ProductId == prodId);
         }
 
         public List<Model.InventoryLineItem> GetInventoryLineItems()

@@ -22,9 +22,9 @@ namespace StoreBL
         {
             _repo.DeleteInventoryLineItem(inventoryLineItem2BDeleted);
         }
-        public InventoryLineItem GetInventoryLineItemById(int id) {
+        public InventoryLineItem GetInventoryLineItemById(int invId, int prodId) {
             //todo validate
-            return _repo.GetInventoryLineItemById(id);
+            return _repo.GetInventoryLineItemById(invId, prodId);
         }
         public List<InventoryLineItem> GetInventoryLineItems()
         {

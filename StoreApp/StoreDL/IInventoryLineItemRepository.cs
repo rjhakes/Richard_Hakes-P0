@@ -7,7 +7,7 @@ namespace StoreDL
     {
         List<InventoryLineItem> GetInventoryLineItems();
         InventoryLineItem AddInventoryLineItem(InventoryLineItem newInventoryLineItem);
-        InventoryLineItem GetInventoryLineItemById(int id);
+        InventoryLineItem GetInventoryLineItemById(int invId, int prodId);
         InventoryLineItem DeleteInventoryLineItem(InventoryLineItem inventoryLineItem2BDeleted);
         void UpdateInventoryLineItem(InventoryLineItem inventoryLineItem2BUpdated);
     }
