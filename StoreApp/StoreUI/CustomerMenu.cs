@@ -97,20 +97,24 @@ namespace StoreUI
         }
 
         public void GetCustomerOrderHistory() {
-            /*foreach (var item in _orderBL.GetOrders()) {
-                /*Console.WriteLine("Getting Customer Order History");
-                Console.WriteLine(item.ToString());*/
-                
-                /*if (item.Customer.Equals(_user)) {
-                    Console.WriteLine($"{item.ToString()}");//\n---------------");
-                    foreach (var lineItem in item.Cart) {
-                        Console.WriteLine(lineItem);
-                        //need to print total
+            Console.WriteLine($"Order History for {_user.CustomerName}");
+            foreach (var item in _customerOrderHistory.GetCustomerOrderHistories())
+            {
+                if (item.CustId == _user.Id)
+                {
+                    Console.WriteLine("----------------------------------------------------------------");
+                    Console.WriteLine($"{item.ToString()}\t\tLocation: {_locationBL.GetLocationById((int)item.LocId).LocName}");
+
+                    foreach (var orderItem in _customerOrderLineItem.GetCustomerOrderLineItems())
+                    {
+                        if (item.OrderId == orderItem.OrderId)
+                        {
+                            Console.WriteLine($"\t{_productBL.GetProductById((int)orderItem.ProdId).ProdName}\n\t\tQuantity: {orderItem.Quantity}");
+                        }
                     }
-                    Console.WriteLine("---------------");
+                    Console.WriteLine();
                 }
-                
-            }*/
+            }
             
             Console.ReadLine();
         }

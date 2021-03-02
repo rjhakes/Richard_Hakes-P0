@@ -10,5 +10,7 @@ namespace StoreModels
         public DateTime OrderDate { get; set; }
         public int? OrderId { get; set; }
         public double? Total { get; set; }
+
+        public override string ToString() => $"Order ID: {this.OrderId}\t\tDate: {this.OrderDate.ToString("yyyy-MM-dd")}\t\tTotal: ${this.Total}";
     }
 }

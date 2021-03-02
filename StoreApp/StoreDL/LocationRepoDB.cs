@@ -38,6 +38,15 @@ namespace StoreDL
             .FirstOrDefault(x => x.LocName == name);
         }
 
+        public Location GetLocationById(int id)
+        {
+            return _context.Locations
+            .AsNoTracking()
+            .Select(x => _mapper.ParseLocation(x))
+            .ToList()
+            .FirstOrDefault(x => x.Id == id);
+        }
+
         public List<Model.Location> GetLocations()
         {
             return _context.Locations.AsNoTracking().Select(x => _mapper.ParseLocation(x)).ToList();

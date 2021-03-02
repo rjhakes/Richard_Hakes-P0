@@ -26,6 +26,10 @@ namespace StoreBL
             //todo validate
             return _repo.GetLocationByName(name);
         }
+        public Location GetLocationById(int id) {
+            //todo validate
+            return _repo.GetLocationById(id);
+        }
         public List<Location> GetLocations()
         {
             //TODO Add BL
